@@ -1,6 +1,7 @@
 package com.fishingLog.spring.model;
 
 import com.fishingLog.spring.utils.Conversions;
+import com.fishingLog.spring.utils.TideStation;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,9 @@ public class Tide {
     private String type;
     @OneToOne(mappedBy = "tide")
     private Record record;
+
+    @Embedded
+    private TideStation tideStation;
 
     public void setTimeWithString(String time) {
         this.time = Conversions.setTimeWithDateString(time);
