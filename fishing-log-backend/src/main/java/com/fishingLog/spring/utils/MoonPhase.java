@@ -1,11 +1,11 @@
 package com.fishingLog.spring.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -13,6 +13,7 @@ import java.time.Instant;
 @Setter
 @Embeddable
 public class MoonPhase implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
     private String text;
     private Instant time;
