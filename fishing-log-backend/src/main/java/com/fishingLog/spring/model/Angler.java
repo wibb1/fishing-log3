@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.Set;
 
 @Setter @Getter
 @Entity
@@ -25,11 +26,13 @@ public class Angler {
     @Column
     private String encryptedPassword;
     @Column
-    private Timestamp createdAt;
+    private Instant createdAt;
     @Column
-    private Timestamp updatedAt;
+    private Instant updatedAt;
+    @ManyToMany
+    private Set<Record> records;
 
-    public Angler(Long id, String firstName, String lastName, String userName, String email, String encryptedPassword, Timestamp createdAt, Timestamp updatedAt) {
+    public Angler(Long id, String firstName, String lastName, String userName, String email, String encryptedPassword, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

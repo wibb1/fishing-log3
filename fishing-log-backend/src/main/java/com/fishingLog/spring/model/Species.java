@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 
 @Setter @Getter
 @Entity
@@ -22,12 +22,12 @@ public class Species {
     @Column
     private Integer deepDepth;
     @Column
-    private Timestamp createdAt;
+    private Instant createdAt;
     @Column
-    private Timestamp updatedAt;
+    private Instant updatedAt;
 
     public Species(Long id, String commonName, String scientificName, Integer shallowDepth,
-                   Integer deepDepth, Timestamp createdAt, Timestamp updatedAt) {
+                   Integer deepDepth, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.commonName = commonName;
         this.scientificName = scientificName;
