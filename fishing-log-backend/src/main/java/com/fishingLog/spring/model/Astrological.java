@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fishingLog.spring.utils.Conversions;
 import com.fishingLog.spring.utils.MoonPhase;
-import com.fishingLog.spring.utils.TideStation;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
