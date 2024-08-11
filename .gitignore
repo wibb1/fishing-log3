@@ -82,6 +82,7 @@ out/
 .env.test.local
 .env.production.local
 .env
+ENVVariables.java
 
 npm-debug.log*
 yarn-debug.log*
