@@ -28,7 +28,7 @@ public class RecordController {
     public List<Record> createRecords(@RequestBody List<Record> records) {
         return recordService.saveRecord(records);
     }
-    @PostMapping
+    @PostMapping("/saveRecord")
     public Record createRecord(@RequestBody Record record) {
         return recordService.saveRecord(record);
     }
