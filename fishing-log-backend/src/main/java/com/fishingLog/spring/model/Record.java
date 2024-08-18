@@ -20,7 +20,7 @@ public class Record {
     @Column(nullable = false)
     private String success;
     @Column(nullable = false)
-    private Integer user_id;
+    private Integer angler_id;
     @Column(nullable = false)
     private Instant created_at;
     @Column(nullable = false)

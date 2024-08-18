@@ -4,8 +4,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fishingLog.spring.model.Tide;
-import com.fishingLog.spring.model.TideStation;
+import com.fishingLog.spring.model.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +33,7 @@ public class ResponseDataForTest {
     }
 
     public String getWeatherDataString() throws IOException {
-        return getAstrologicalDataJsonNode().toString();
+        return getWeatherDataJsonNode().toString();
     }
 
     public JsonNode getTideDataJsonNode() throws IOException {
@@ -80,6 +79,35 @@ public class ResponseDataForTest {
             put("thirdTide", new Tide(0.484495766600653, Instant.parse("2024-07-12T04:55:00Z"), "high"));
             put("fourthTide", new Tide(-0.3884259370281767, Instant.parse("2024-07-12T10:10:00Z"), "low"));
             put("station", new TideStation(8, 41.5933, -70.9, "new bedford, clarks point, ma", "noaa"));
+        }};
+    }
+
+    public Map<String, Object> getWeatherMapTest() {
+        return new HashMap<>() {{
+            put("airTemperature", 23.38);
+            put("cloudCover",43.7);
+            put("currentDirection",321.8);
+            put("currentSpeed", 0.06);
+            put("gust",13.53);
+            put("humidity",90.9);
+            put("pressure",1022.44);
+            put("seaLevel",-0.54);
+            put("secondarySwellDirection",173.39);
+            put("secondarySwellHeight",0.09);
+            put("secondarySwellPeriod",8.71);
+            put("swellDirection",175.11);
+            put("swellHeight",0.18);
+            put("swellPeriod",5.82);
+            put("time", Instant.parse("2024-07-12T21:00:00Z"));
+            put("visibility",24.13);
+            put("waveDirection",195.18);
+            put("waveHeight",0.76);
+            put("wavePeriod",4.67);
+            put("windDirection",211.35);
+            put("windSpeed",7.16);
+            put("windWaveDirection",203.34);
+            put("windWaveHeight",0.76);
+            put("windWavePeriod", 5.36);
         }};
     }
 }

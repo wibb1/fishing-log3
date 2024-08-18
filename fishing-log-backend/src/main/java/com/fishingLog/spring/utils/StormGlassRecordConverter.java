@@ -1,26 +1,66 @@
-package com.fishingLog.spring.utils;
+//Not Sure I need this any longer
 
-import lombok.Getter;
-import lombok.Setter;
-
-import java.time.Instant;
-
-@Getter
-@Setter
-public class StormGlassRecordConverter {
-    private Double latitude;
-    private Double longitude;
-    private Instant parsedTime;
-
-    public StormGlassRecordConverter(Double latitude, Double longitude, Instant parsedTime) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.parsedTime = parsedTime;
-    }
-
-    public StormGlassRecordConverter() {}
-
-
+//package com.fishingLog.spring.utils;
+//
+//import com.fasterxml.jackson.core.JsonFactory;
+//import com.fasterxml.jackson.core.JsonParser;
+//import com.fasterxml.jackson.databind.JsonNode;
+//import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.fishingLog.spring.model.Tide;
+//import lombok.Getter;
+//import lombok.Setter;
+//
+//import java.io.IOException;
+//import java.time.Instant;
+//import java.util.HashMap;
+//import java.util.Map;
+//
+//@Getter
+//@Setter
+//public class StormGlassRecordConverter {
+//
+//    Map<String, String> recordDataMap = new HashMap<>() {
+//        {
+//            {
+//                put("name", "String");
+//                put("success", "String");
+//                put("angler_id", "Integer");
+//                put("created_at", "Instant");
+//                put("updated_at", "Instant");
+//                put("body", "String");
+//                put("latitude", "Double");
+//                put("longitude", "Double");
+//                put("datetime", "Instant");
+//                put("timezone", "String");
+//                put("anglers", "Set<Angler>");
+//                put("weather", "Weather");
+//                put("tide", "Tide");
+//                put("astrological", "Astrological");
+//            }
+//        }
+//    };
+//
+//    public StormGlassRecordConverter() {}
+//
+//    public StormGlassRecordConverter(String data) throws IOException {
+//        Map<String, Object> responseData = new HashMap<>();
+//        ObjectMapper mapper = new ObjectMapper();
+//        JsonFactory factory = mapper.getFactory();
+//        JsonParser parser = factory.createParser(data);
+//        JsonNode actualObj = mapper.readTree(parser);
+//        JsonNode recordData = actualObj.get("hours");
+//        JsonNode metaJson = actualObj.get("meta");
+//        String[] recordNames = recordDataMap.keySet().toArray(new String[0]);
+//        int counter = 0;
+//        for (JsonNode each : recordData) {
+//            Tide tide = new Tide();
+//            tide.setHeight(each.get("height").asDouble());
+//            tide.setTimeWithString(each.get("time").asText());
+//            tide.setType(each.get("type").asText());
+//            responseData.put(recordNames[counter], tide);
+//            counter++;
+//        }
+//    }
 
 
 
@@ -98,4 +138,4 @@ public class StormGlassRecordConverter {
 //    end
 //            end
 //    end
-}
+//}

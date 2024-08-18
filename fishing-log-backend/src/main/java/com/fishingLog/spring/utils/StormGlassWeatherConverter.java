@@ -9,11 +9,11 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class StormGlassWeatherConverter {
     Map<String, String> weatherDataMap = new HashMap<>() {
         {
-            // weather - hours
             put("airTemperature", "Double");
             put("cloudCover", "Double");
             put("currentDirection", "Double");
@@ -41,7 +41,7 @@ public class StormGlassWeatherConverter {
         }
     };
 
-    public Map<String, Object> weatherDataConverter(String data, String[] keys) throws IOException {
+    public Map<String, Object> weatherDataConverter(String data) throws IOException {
         Map<String, Object> responseData = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
         JsonFactory factory = mapper.getFactory();
@@ -49,11 +49,13 @@ public class StormGlassWeatherConverter {
         JsonNode actualObj = mapper.readTree(parser);
         JsonNode firstWeatherData = actualObj.get("hours").get(0);
         JsonNode metaData = actualObj.get("meta").get("params");
+        Set<String> keys = weatherDataMap.keySet();
         for (String each : keys) {
-            if (weatherDataMap.get(each) != (null)) {
-                switch (weatherDataMap.get(each)) {
+            if (weatherDataMap.get(each) != null) {
+                String classType = weatherDataMap.get(each);
+                switch (classType) {
                     case "Instant" ->
-                            responseData.put(each, Instant.parse(firstWeatherData.get(each).get("sg").asText()));
+                            responseData.put(each, Instant.parse(firstWeatherData.get(each).asText()));
                     case "Double" -> responseData.put(each, firstWeatherData.get(each).get("sg").asDouble());
                     default -> throw new IOException("Unrecognized class type in StormGlass Weather Converter");
                 }
