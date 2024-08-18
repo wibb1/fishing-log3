@@ -49,7 +49,8 @@ public class Astrological {
     })
     private MoonPhase currentMoonPhase;
 
-    @Embedded
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="tideStationId", referencedColumnName = "id")
     private TideStation tideStation;
 
     @OneToOne(mappedBy = "astrological")

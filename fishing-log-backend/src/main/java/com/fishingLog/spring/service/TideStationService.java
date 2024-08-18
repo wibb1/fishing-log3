@@ -1,10 +1,9 @@
 package com.fishingLog.spring.service;
 
-import com.fishingLog.spring.model.Tide;
 import com.fishingLog.spring.model.TideStation;
-import com.fishingLog.spring.repository.TideRepository;
 import com.fishingLog.spring.repository.TideStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +19,12 @@ public class TideStationService {
 
     public Optional<TideStation> findTideStation(Long id) {
         return tideStationRepository.findById(id);
+    }
+
+    public List<TideStation> findTideStations(String name) {
+        TideStation tideStation = new TideStation();
+        tideStation.setStationName(name);
+        return tideStationRepository.findAll(Example.of(tideStation));
     }
 
     public TideStation saveTideStation(TideStation tideStation) {

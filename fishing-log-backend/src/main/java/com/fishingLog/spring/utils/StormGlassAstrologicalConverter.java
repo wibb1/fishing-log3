@@ -46,24 +46,12 @@ public class StormGlassAstrologicalConverter {
             String classType = astrologicalDataMap.get(each);
             if (astrologicalDataMap.get(each) != null) {
                 switch (classType) {
-                    case "Instant":
-                        responseData.put(each, Instant.parse(dataJson.get(each).asText()));
-                        break;
-                    case "MoonPhase":
+                    case "Instant" -> responseData.put(each, Instant.parse(dataJson.get(each).asText()));
+                    case "MoonPhase" -> {
                         MoonPhase moonPhase = new MoonPhase(dataJson.get("moonPhase").get(each));
-//                        closest.setTimeWithString(dataJson.get(each).findValue("closest").findValue("time").asText("NA"));
-//                        closest.setText(dataJson.get(each).findValue("closest").findValue("text").asText("NA"));
-//                        closest.setValue((dataJson.get(each).findValue("closest").findValue("value").asDouble(0.0)));
                         responseData.put(each, moonPhase);
-
-//                        MoonPhase current = new MoonPhase(dataJson.get(each).findValue("current"));
-////                        current.setTimeWithString(dataJson.get(each).findValue("current").findValue("time").asText("NA"));
-////                        current.setText(dataJson.get(each).findValue("current").findValue("text").asText("NA"));
-////                        current.setValue((dataJson.get(each).findValue("current").findValue("value").asDouble(0.0)));
-//                        responseData.put(each, current);
-                        break;
-                    default:
-                        throw new IOException("Unrecognized class type in StormGlass Astrological Converter");
+                    }
+                    default -> throw new IOException("Unrecognized class type in StormGlass Astrological Converter");
                 }
             }
         }

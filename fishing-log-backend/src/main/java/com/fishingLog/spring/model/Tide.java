@@ -1,7 +1,7 @@
 package com.fishingLog.spring.model;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fishingLog.spring.utils.Conversions;
-import com.fishingLog.spring.utils.TideStation;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,8 +21,8 @@ public class Tide {
     private String type;
     @OneToOne(mappedBy = "tide")
     private Record record;
-
-    @Embedded
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "tidestationid", referencedColumnName = "id")
     private TideStation tideStation;
 
     public void setTimeWithString(String time) {
@@ -31,10 +31,15 @@ public class Tide {
 
     public Tide() {}
 
-    public Tide(Double height, Instant time, String type, Record record) {
+    public Tide(Double height, Instant time, String type) {
         this.height = height;
         this.time = time;
         this.type = type;
-        this.record = record;
+    }
+
+    public Tide(JsonNode data) {
+        this.height = data.get("height").asDouble();
+        this.setTimeWithString(data.get("time").asText());
+        this.type = data.get("type").asText();
     }
 }

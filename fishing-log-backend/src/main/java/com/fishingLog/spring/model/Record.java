@@ -35,17 +35,19 @@ public class Record {
     private Instant datetime;
     @Column(nullable = false)
     private String timezone;
+
     @ManyToMany(mappedBy = "records")
     private Set<Angler> anglers;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "weatherId", referencedColumnName = "id")
     private Weather weather;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "tideId", referencedColumnName = "id")
     private Tide tide;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "astrologicalId", referencedColumnName = "id")
     private Astrological astrological;
-
 }

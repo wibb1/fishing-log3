@@ -70,7 +70,17 @@ public class ResponseDataForTestTest {
         ResponseDataForTest responseDataForTest = new ResponseDataForTest();
         String actualResponse = responseDataForTest.getWeatherDataString();
 
-        assertEquals("", actualResponse);
+        String expectedWeather = "{\"data\":[{\"astronomicalDawn\":\"2024-07-12T07:16:38+00:00\"," +
+                "\"astronomicalDusk\":\"2024-07-13T02:23:16+00:00\",\"civilDawn\":\"2024-07-12T08:48:00+00:00\"," +
+                "\"civilDusk\":\"2024-07-13T00:51:55+00:00\",\"moonFraction\":0.3267293520444956,\"" +
+                "moonPhase\":{\"closest\":{\"text\":\"First quarter\",\"time\":\"2024-07-13T15:55:00+00:00\",\"value\":0.25}," +
+                "\"current\":{\"text\":\"Waxing crescent\",\"time\":\"2024-07-12T00:00:00+00:00\",\"value\":0.19367802604339596}}," +
+                "\"moonrise\":\"2024-07-12T15:53:14+00:00\",\"moonset\":\"2024-07-12T03:26:21+00:00\",\"nauticalDawn\":" +
+                "\"2024-07-12T08:05:52+00:00\",\"nauticalDusk\":\"2024-07-13T01:34:03+00:00\",\"sunrise\":" +
+                "\"2024-07-12T09:21:12+00:00\",\"sunset\":\"2024-07-13T00:18:43+00:00\",\"time\":" +
+                "\"2024-07-12T00:00:00+00:00\"}],\"meta\":{\"cost\":1,\"dailyQuota\":50,\"lat\":41.6,\"lng\":-70.8," +
+                "\"requestCount\":12,\"start\":\"2024-07-12 00:00\"}}";
+        assertEquals(expectedWeather, actualResponse);
     }
 
     @Test
@@ -86,7 +96,15 @@ public class ResponseDataForTestTest {
         ResponseDataForTest responseDataForTest = new ResponseDataForTest();
         String actualResponse = responseDataForTest.getTideDataString();
 
-        assertEquals("", actualResponse);
+        String expectedTideData = "{\"data\":[{\"height\":0.484495766600653,\"time\":" +
+                "\"2024-07-12T04:55:00+00:00\",\"type\":\"high\"},{\"height\":-0.3884259370281767,\"time\":" +
+                "\"2024-07-12T10:10:00+00:00\",\"type\":\"low\"},{\"height\":0.5242476943841401,\"time\":" +
+                "\"2024-07-12T17:25:00+00:00\",\"type\":\"high\"},{\"height\":-0.2936569385171069,\"time\":" +
+                "\"2024-07-12T22:40:00+00:00\",\"type\":\"low\"}],\"meta\":{\"cost\":1,\"dailyQuota\":50,\"datum\":\"MSL\"," +
+                "\"end\":\"2024-07-12 23:59\",\"lat\":41.6,\"lng\":-70.8,\"offset\":0,\"requestCount\":11,\"start\":" +
+                "\"2024-07-12 00:00\",\"station\":{\"distance\":8,\"lat\":41.5933,\"lng\":-70.9,\"name\":\"" +
+                "new bedford, clarks point, ma\",\"source\":\"noaa\"}}}";
+        assertEquals(expectedTideData, actualResponse);
     }
 
     @Test
@@ -102,7 +120,17 @@ public class ResponseDataForTestTest {
         ResponseDataForTest responseDataForTest = new ResponseDataForTest();
         String actualResponse = responseDataForTest.getAstrologicalDataString();
 
-        assertEquals("", actualResponse);
+        String expectedAstrologicalData = "{\"data\":[{\"astronomicalDawn\":\"2024-07-12T07:16:38+00:00" +
+                "\",\"astronomicalDusk\":\"2024-07-13T02:23:16+00:00\",\"civilDawn\":\"2024-07-12T08:48:00+00:00\"," +
+                "\"civilDusk\":\"2024-07-13T00:51:55+00:00\",\"moonFraction\":0.3267293520444956,\"moonPhase\":{\"closest" +
+                "\":{\"text\":\"First quarter\",\"time\":\"2024-07-13T15:55:00+00:00\",\"value\":0.25},\"current\":{" +
+                "\"text\":\"Waxing crescent\",\"time\":\"2024-07-12T00:00:00+00:00\",\"value\":0.19367802604339596}}," +
+                "\"moonrise\":\"2024-07-12T15:53:14+00:00\",\"moonset\":\"2024-07-12T03:26:21+00:00\",\"nauticalDawn\":" +
+                "\"2024-07-12T08:05:52+00:00\",\"nauticalDusk\":\"2024-07-13T01:34:03+00:00\",\"sunrise\":" +
+                "\"2024-07-12T09:21:12+00:00\",\"sunset\":\"2024-07-13T00:18:43+00:00\",\"time\":\"" +
+                "2024-07-12T00:00:00+00:00\"}],\"meta\":{\"cost\":1,\"dailyQuota\":50,\"lat\":41.6,\"lng\":-70.8," +
+                "\"requestCount\":12,\"start\":\"2024-07-12 00:00\"}}";
+        assertEquals(expectedAstrologicalData, actualResponse);
     }
 
     private JsonNode getJsonNode() throws JsonProcessingException {

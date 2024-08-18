@@ -45,7 +45,7 @@ public class Angler {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "Angler{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
