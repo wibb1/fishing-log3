@@ -16,13 +16,13 @@ public class StormGlassAstrologicalConverterTest {
     private final ResponseDataForTest response = new ResponseDataForTest();
     private Map<String,Object> actualResponse;
     private Map<String,Object> expectedResponse;
-    private final StormGlassAstrologicalConverter sgac = new StormGlassAstrologicalConverter();
+    private final StormGlassAstrologicalConverter stormGlassAstrologicalConverter = new StormGlassAstrologicalConverter();
     @Test
     public void astrologicalDataConverterTest() throws IOException {
         StormGlassApiService stormGlassApiService = mock(StormGlassApiService.class);
         when(stormGlassApiService.obtainData()).thenReturn(Collections.singletonList(response.getDataString()));
 
-        actualResponse = sgac.dataConverter(response.getAstrologicalDataString());
+        actualResponse = stormGlassAstrologicalConverter.dataConverter(response.getAstrologicalDataString());
         expectedResponse = response.getAstroMapTest();
 
         assertEqualsKey("astronomicalDawn");
