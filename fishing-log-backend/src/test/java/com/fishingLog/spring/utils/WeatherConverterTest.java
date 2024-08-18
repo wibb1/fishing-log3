@@ -21,7 +21,7 @@ public class WeatherConverterTest {
         StormGlassApiService stormGlassApiService = mock(StormGlassApiService.class);
         when(stormGlassApiService.obtainData()).thenReturn(Collections.singletonList(response.getDataString()));
 
-        actualResponse = stormGlassWeatherConverter.weatherDataConverter(response.getWeatherDataString());
+        actualResponse = stormGlassWeatherConverter.dataConverter(response.getWeatherDataString());
         expectedResponse = response.getWeatherMapTest();
 
         assertEquals(expectedResponse.get("airTemperature"), actualResponse.get("airTemperature"));

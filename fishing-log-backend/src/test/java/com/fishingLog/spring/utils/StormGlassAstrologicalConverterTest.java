@@ -13,16 +13,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class StormGlassAstrologicalConverterTest {
-    private ResponseDataForTest response = new ResponseDataForTest();
+    private final ResponseDataForTest response = new ResponseDataForTest();
     private Map<String,Object> actualResponse;
     private Map<String,Object> expectedResponse;
-    private StormGlassAstrologicalConverter sgac = new StormGlassAstrologicalConverter();
+    private final StormGlassAstrologicalConverter sgac = new StormGlassAstrologicalConverter();
     @Test
     public void astrologicalDataConverterTest() throws IOException {
         StormGlassApiService stormGlassApiService = mock(StormGlassApiService.class);
         when(stormGlassApiService.obtainData()).thenReturn(Collections.singletonList(response.getDataString()));
 
-        actualResponse = sgac.astrologicalDataConverter(response.getAstrologicalDataString());
+        actualResponse = sgac.dataConverter(response.getAstrologicalDataString());
         expectedResponse = response.getAstroMapTest();
 
         assertEqualsKey("astronomicalDawn");

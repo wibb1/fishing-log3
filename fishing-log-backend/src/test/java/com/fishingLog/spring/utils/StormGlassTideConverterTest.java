@@ -23,7 +23,7 @@ public class StormGlassTideConverterTest {
         StormGlassApiService stormGlassApiService = mock(StormGlassApiService.class);
         when(stormGlassApiService.obtainData()).thenReturn(Collections.singletonList(response.getDataString()));
 
-        actualResponse = stormGlassTideConverter.tideDataConverter(response.getTideDataString());
+        actualResponse = stormGlassTideConverter.dataConverter(response.getTideDataString());
         expectedResponse = response.getTideMapTest();
 
         assertEqualsTide("firstTide");
