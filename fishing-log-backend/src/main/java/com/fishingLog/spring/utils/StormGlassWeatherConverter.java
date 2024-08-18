@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class StormGlassWeatherConverter {
+public class StormGlassWeatherConverter implements StormGlassDataConverter {
     Map<String, String> weatherDataMap = new HashMap<>() {
         {
             put("airTemperature", "Double");
@@ -41,7 +41,7 @@ public class StormGlassWeatherConverter {
         }
     };
 
-    public Map<String, Object> weatherDataConverter(String data) throws IOException {
+    public Map<String, Object> dataConverter(String data) throws IOException {
         Map<String, Object> responseData = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
         JsonFactory factory = mapper.getFactory();

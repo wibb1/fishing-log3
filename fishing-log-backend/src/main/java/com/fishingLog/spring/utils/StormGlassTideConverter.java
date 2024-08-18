@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StormGlassTideConverter {
+public class StormGlassTideConverter implements StormGlassDataConverter{
     Map<String, String> tideDataMap = new HashMap<>() {
         {
             put("firstTide", "Tide");
@@ -21,7 +21,7 @@ public class StormGlassTideConverter {
         }
     };
 
-    public Map<String, Object> tideDataConverter(String data) throws IOException {
+    public Map<String, Object> dataConverter(String data) throws IOException {
         Map<String, Object> responseData = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
         JsonFactory factory = mapper.getFactory();

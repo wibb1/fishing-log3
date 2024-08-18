@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class StormGlassAstrologicalConverter {
+public class StormGlassAstrologicalConverter implements StormGlassDataConverter {
 
     Map<String, String> astrologicalDataMap = new HashMap<>() {
         {
@@ -33,7 +33,7 @@ public class StormGlassAstrologicalConverter {
         }
     };
 
-    public Map<String, Object> astrologicalDataConverter(String data) throws IOException {
+    public Map<String, Object> dataConverter(String data) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonFactory factory = mapper.getFactory();
         JsonParser parser = factory.createParser(data);
