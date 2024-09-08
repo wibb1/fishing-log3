@@ -12,7 +12,7 @@ public class AstrologicalService {
         @Autowired
         public AstrologicalRepository astrologicalRepository;
 
-        public List<Astrological> findAllAstrologicals() {
+        public List<Astrological> findAllAstrological() {
             return astrologicalRepository.findAll();
         }
 
