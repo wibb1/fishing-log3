@@ -3,9 +3,14 @@ package com.fishingLog.spring.model;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter @Getter @Entity @Table(name = "tideStation", uniqueConstraints = {@UniqueConstraint(columnNames = {"id", "stationName"})})
+@Setter
+@Getter
+@NoArgsConstructor
+@Entity
+@Table(name = "tideStation", uniqueConstraints = {@UniqueConstraint(columnNames = {"id", "stationName"})})
 public class TideStation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,8 +20,6 @@ public class TideStation {
     @Column private Double stationLat;
     @Column private Double stationLng;
     @Column private String stationSource;
-
-    public TideStation() {}
 
     public TideStation(JsonNode stationData) {
         this.stationDistance = stationData.get("distance").asInt();

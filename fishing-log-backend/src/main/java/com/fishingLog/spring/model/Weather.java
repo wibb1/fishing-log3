@@ -3,6 +3,7 @@ package com.fishingLog.spring.model;
 import com.fishingLog.spring.utils.Conversions;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
@@ -11,6 +12,7 @@ import java.time.Instant;
 @Table(name = "weather")
 @Setter
 @Getter
+@NoArgsConstructor
 public class Weather {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

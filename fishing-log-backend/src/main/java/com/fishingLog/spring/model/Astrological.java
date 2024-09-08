@@ -6,12 +6,17 @@ import com.fishingLog.spring.utils.Conversions;
 import com.fishingLog.spring.utils.MoonPhase;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
 import java.util.Map;
 
-@Getter @Setter @Entity @Table(name = "astrological")
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
+@Table(name = "astrological")
 public class Astrological {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,9 +60,6 @@ public class Astrological {
 
     @OneToOne(mappedBy = "astrological")
     private Record record;
-
-    public Astrological() {
-    }
 
     public Astrological(JsonNode actualObj) {
         JsonNode dataJson = actualObj.get("data").get(0);

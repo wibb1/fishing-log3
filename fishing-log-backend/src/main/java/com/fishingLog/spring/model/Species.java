@@ -2,12 +2,14 @@ package com.fishingLog.spring.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
 
 @Setter @Getter
 @Entity
+@NoArgsConstructor
 @Table(name="species")
 public class Species {
     @Id

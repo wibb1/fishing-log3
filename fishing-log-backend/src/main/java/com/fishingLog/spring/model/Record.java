@@ -2,6 +2,7 @@ package com.fishingLog.spring.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
@@ -9,6 +10,7 @@ import java.util.Set;
 
 @Setter
 @Getter
+@NoArgsConstructor
 @Entity
 @Table(name = "record")
 public class Record {

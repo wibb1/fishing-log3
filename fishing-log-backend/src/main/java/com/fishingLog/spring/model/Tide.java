@@ -4,11 +4,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fishingLog.spring.utils.Conversions;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
 
-@Getter @Setter @Entity @Table(name ="tide")
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
+@Table(name = "tide")
 public class Tide {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,8 +33,6 @@ public class Tide {
     public void setTimeWithString(String time) {
         this.time = Conversions.setTimeWithDateString(time);
     }
-
-    public Tide() {}
 
     public Tide(Double height, Instant time, String type) {
         this.height = height;
