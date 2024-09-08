@@ -2,16 +2,18 @@ package com.fishingLog.spring.model;
 
 import com.fishingLog.spring.utils.Conversions;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "weather")
 @Setter
 @Getter
+@ToString
+@EqualsAndHashCode(exclude = {"id"})
 @NoArgsConstructor
 public class Weather {
     @Id
@@ -66,8 +68,8 @@ public class Weather {
     @Column
     private Double windWavePeriod;
 
-    @OneToOne(mappedBy = "weather")
-    private Record record;
+    @OneToMany(mappedBy = "weather", orphanRemoval = true)
+    private List<Record> records = new ArrayList<>();
 
     public void setTimeWithString(String time) {
         this.time = Conversions.setTimeWithDateString(time);

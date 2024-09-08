@@ -1,16 +1,18 @@
 package com.fishingLog.spring.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Setter
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"angler_id", "latitude", "longitude", "datetime", "timezone"})
+@ToString
 @Entity
 @Table(name = "record")
 public class Record {
@@ -41,13 +43,12 @@ public class Record {
     @ManyToMany(mappedBy = "records")
     private Set<Angler> anglers;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "weatherId", referencedColumnName = "id")
     private Weather weather;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "tideId", referencedColumnName = "id")
-    private Tide tide;
+    @OneToMany(mappedBy = "record", orphanRemoval = true)
+    private List<Tide> tides = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "astrologicalId", referencedColumnName = "id")

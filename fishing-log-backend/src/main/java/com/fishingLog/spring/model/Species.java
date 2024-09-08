@@ -1,15 +1,15 @@
 package com.fishingLog.spring.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.Instant;
 
 @Setter @Getter
 @Entity
 @NoArgsConstructor
+@ToString
+@EqualsAndHashCode(of = {"scientificName"})
 @Table(name="species")
 public class Species {
     @Id

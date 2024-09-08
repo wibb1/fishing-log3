@@ -1,9 +1,7 @@
 package com.fishingLog.spring.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.Instant;
 import java.util.Set;
@@ -11,6 +9,8 @@ import java.util.Set;
 @Setter @Getter
 @Entity
 @NoArgsConstructor
+@EqualsAndHashCode(exclude = {"id", "encryptedPassword", "salt", "createdAt", "updatedAt"})
+@ToString(exclude = {"encryptedPassword", "salt"})
 @Table(name="angler")
 
 public class Angler {
@@ -46,16 +46,5 @@ public class Angler {
         this.salt = salt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-    }
-
-    @Override
-    public String toString() {
-        return "Angler{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", userName='" + userName + '\'' +
-                ", email='" + email + '\'' +
-                '}';
     }
 }

@@ -5,9 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fishingLog.spring.utils.Conversions;
 import com.fishingLog.spring.utils.MoonPhase;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.Instant;
 import java.util.Map;
@@ -16,6 +14,8 @@ import java.util.Map;
 @Setter
 @NoArgsConstructor
 @Entity
+@ToString
+@EqualsAndHashCode(exclude = {"id"})
 @Table(name = "astrological")
 public class Astrological {
     @Id

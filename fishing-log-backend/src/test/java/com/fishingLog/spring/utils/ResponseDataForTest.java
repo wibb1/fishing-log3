@@ -78,7 +78,7 @@ public class ResponseDataForTest {
             put("secondTide", new Tide(0.5242476943841401, Instant.parse("2024-07-12T17:25:00Z"), "high"));
             put("thirdTide", new Tide(0.484495766600653, Instant.parse("2024-07-12T04:55:00Z"), "high"));
             put("fourthTide", new Tide(-0.3884259370281767, Instant.parse("2024-07-12T10:10:00Z"), "low"));
-            put("station", new TideStation(8, 41.5933, -70.9, "new bedford, clarks point, ma", "noaa"));
+            put("station", new TideStation(41.5933, -70.9, "new bedford, clarks point, ma", "noaa"));
         }};
     }
 

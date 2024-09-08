@@ -3,29 +3,35 @@ package com.fishingLog.spring.model;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fishingLog.spring.utils.Conversions;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.Instant;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
+@EqualsAndHashCode(exclude ={"id",})
 @Entity
 @Table(name = "tide")
 public class Tide {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column
     private Double height;
+
     @Column
     private Instant time;
+
     @Column
     private String type;
-    @OneToOne(mappedBy = "tide")
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "recordid", referencedColumnName = "id")
     private Record record;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "tidestationid", referencedColumnName = "id")
     private TideStation tideStation;
