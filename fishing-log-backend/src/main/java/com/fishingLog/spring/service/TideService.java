@@ -13,7 +13,7 @@ public class TideService {
     @Autowired
     public TideRepository tideRepository;
 
-    public List<Tide> findAllRecords() {
+    public List<Tide> findAllTides() {
         return tideRepository.findAll();
     }
 
