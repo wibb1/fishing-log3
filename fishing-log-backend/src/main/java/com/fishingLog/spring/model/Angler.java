@@ -2,6 +2,7 @@ package com.fishingLog.spring.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
@@ -9,36 +10,40 @@ import java.util.Set;
 
 @Setter @Getter
 @Entity
+@NoArgsConstructor
 @Table(name="angler")
 
 public class Angler {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+    @Column(nullable = false)
     private String firstName;
-    @Column
+    @Column(nullable = false)
     private String lastName;
-    @Column
+    @Column(nullable = false)
     private String userName;
-    @Column
+    @Column(nullable = false)
     private String email;
-    @Column
+    @Column(nullable = false)
     private String encryptedPassword;
-    @Column
+    @Column(nullable = false)
+    private String salt;
+    @Column(nullable = false)
     private Instant createdAt;
-    @Column
+    @Column(nullable = false)
     private Instant updatedAt;
     @ManyToMany
     private Set<Record> records;
 
-    public Angler(Long id, String firstName, String lastName, String userName, String email, String encryptedPassword, Instant createdAt, Instant updatedAt) {
+    public Angler(Long id, String firstName, String lastName, String userName, String email, String encryptedPassword, String salt, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
         this.email = email;
         this.encryptedPassword = encryptedPassword;
+        this.salt = salt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -51,9 +56,6 @@ public class Angler {
                 ", lastName='" + lastName + '\'' +
                 ", userName='" + userName + '\'' +
                 ", email='" + email + '\'' +
-                ", encryptedPassword='" + encryptedPassword + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
                 '}';
     }
 }
