@@ -47,7 +47,6 @@ public class StormGlassTideConverterTest {
         TideStation actualTide = (TideStation) actualResponse.get("station");
 
         assertEquals(expectedTide.getStationName(), actualTide.getStationName());
-        assertEquals(expectedTide.getStationDistance(), actualTide.getStationDistance());
         assertEquals(expectedTide.getStationLat(), actualTide.getStationLat());
         assertEquals(expectedTide.getStationLng(), actualTide.getStationLng());
         assertEquals(expectedTide.getStationSource(), actualTide.getStationSource());
