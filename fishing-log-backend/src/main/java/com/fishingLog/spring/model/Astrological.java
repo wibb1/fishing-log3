@@ -2,11 +2,12 @@ package com.fishingLog.spring.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fishingLog.spring.utils.Conversions;
 import com.fishingLog.spring.utils.MoonPhase;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.Instant;
 import java.util.Map;
 
@@ -73,7 +74,7 @@ public class Astrological {
         this.sunrise = Instant.parse(dataJson.get("sunrise").asText());
         this.sunset = Instant.parse(dataJson.get("sunset").asText());
         this.time = Instant.parse(dataJson.get("time").asText());
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
         this.closestMoonPhase = mapper.convertValue(dataJson.get("moonPhase").get("closest"), MoonPhase.class);
         this.currentMoonPhase = mapper.convertValue(dataJson.get("moonPhase").get("current"), MoonPhase.class);
         this.tideStation = new TideStation(metaJson);
