@@ -3,7 +3,6 @@ package com.fishingLog.spring.service;
 import com.fishingLog.spring.model.Species;
 import com.fishingLog.spring.repository.SpeciesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,11 +27,7 @@ public class SpeciesService {
 
     public Species saveSpecies(Species species) {
         Optional<Species> savedSpecies = speciesRepository.findByScientificName(species.getScientificName());
-        if(savedSpecies.isPresent()){
-            throw new DataIntegrityViolationException("Species already exist with scientific name:" + savedSpecies.get().getScientificName());
-        }
-
-        return speciesRepository.save(species);
+        return savedSpecies.orElseGet(() -> speciesRepository.save(species));
     }
 
     public List<Species> saveSpecies(List<Species> species) {

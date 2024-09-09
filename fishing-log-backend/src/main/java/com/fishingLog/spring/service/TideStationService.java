@@ -3,6 +3,7 @@ package com.fishingLog.spring.service;
 import com.fishingLog.spring.model.TideStation;
 import com.fishingLog.spring.repository.TideStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,8 +26,13 @@ public class TideStationService {
         return tideStationRepository.findById(id);
     }
 
+    public Optional<TideStation> findEqualTideStation(TideStation tideStation) {
+        return tideStationRepository.findOne(Example.of(tideStation));
+    }
+
     public TideStation saveTideStation(TideStation tideStation) {
-        return tideStationRepository.save(tideStation);
+        Optional<TideStation> equalTideStation = findEqualTideStation(tideStation);
+        return equalTideStation.orElseGet(() -> tideStationRepository.save(tideStation));
     }
 
     public void deleteTideStation(Long id) {

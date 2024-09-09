@@ -3,6 +3,7 @@ package com.fishingLog.spring.service;
 import com.fishingLog.spring.model.Record;
 import com.fishingLog.spring.repository.RecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +22,13 @@ public class RecordService {
         return recordRepository.findById(id);
     }
 
-    public Record saveRecord(Record record) {
-        return recordRepository.save(record);
+    public Optional<Record> findEqualRecord(Record a) {
+        return recordRepository.findOne(Example.of(a));
+    }
+
+    public Record saveRecord(Record astrological) {
+        Optional<Record> equalRecord = findEqualRecord(astrological);
+        return equalRecord.orElseGet(() -> recordRepository.save(astrological));
     }
 
     public List<Record> saveRecord(List<Record> record) {
