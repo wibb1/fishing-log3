@@ -28,10 +28,7 @@ public class AstrologicalService {
 
         public Astrological saveAstrological(Astrological astrological) {
             Optional<Astrological> equalAstrological = findEqualAstrological(astrological);
-            if (equalAstrological.isPresent()) {
-                return equalAstrological.get();
-            }
-            return astrologicalRepository.save(astrological);
+            return equalAstrological.orElseGet(() -> astrologicalRepository.save(astrological));
         }
 
         public void deleteAstrological(Long id) {
