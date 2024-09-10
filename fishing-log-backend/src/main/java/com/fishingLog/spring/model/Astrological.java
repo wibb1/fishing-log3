@@ -62,9 +62,7 @@ public class Astrological {
     @OneToOne(mappedBy = "astrological")
     private Record record;
 
-    public Astrological(JsonNode actualObj) {
-        JsonNode dataJson = actualObj.get("data").get(0);
-        JsonNode metaJson = actualObj.get("meta").get("station");
+    public Astrological(JsonNode dataJson, JsonNode metaJson) {
         this.astronomicalDawn = Instant.parse(dataJson.get("astronomicalDawn").asText());
         this.astronomicalDusk = Instant.parse(dataJson.get("astronomicalDusk").asText());
         this.civilDawn = Instant.parse(dataJson.get("civilDawn").asText());
