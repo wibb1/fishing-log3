@@ -35,11 +35,10 @@ dependencies {
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("org.postgresql:postgresql")
 	annotationProcessor("org.projectlombok:lombok")
-//	implementation("org.hibernate.orm:hibernate-core:6.5.1.Final")
-//	annotationProcessor("org.hibernate.orm:hibernate-jpamodelgen:6.5.1.Final")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 //	testImplementation("org.springframework.security:spring-security-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testRuntimeOnly("org.junit.platform:junit-platform-suite")
 }
 
 tasks.withType<Test> {
