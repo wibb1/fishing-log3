@@ -12,10 +12,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Instant;
@@ -27,20 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @AutoConfigureMockMvc
 @Testcontainers
 @ActiveProfiles("test")
-public class AnglerServiceTest {
-
-    @Container
-    static PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:latest")
-            .withDatabaseName("testdb")
-            .withUsername("testuser")
-            .withPassword("testpassword");
-
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgresContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", postgresContainer::getUsername);
-        registry.add("spring.datasource.password", postgresContainer::getPassword);
-    }
+public class AnglerServiceTest extends BaseIntegrationTest {
 
     @Autowired
     private AnglerRepository repository;
@@ -51,13 +34,13 @@ public class AnglerServiceTest {
     private Angler angler;
 
     @BeforeEach
-    public void setup() {
+    public void start() {
         angler = new Angler(1L, "Samwise", "Gamgee", "SamwiseGamgee",
                 "SamWizeGamGee@noplace.com", "USER","password", "", Instant.now(), Instant.now());
     }
 
     @AfterEach
-    public void teardown() {
+    public void stop() {
         repository.deleteAll(); // Optional if using @Transactional
         angler = null;
     }

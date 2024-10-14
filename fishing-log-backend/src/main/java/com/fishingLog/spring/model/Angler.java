@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.Set;
 
 @Setter @Getter
@@ -49,5 +50,10 @@ public class Angler {
         this.salt = salt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public Set<Record> getRecords() {
+        if (records == null) return Collections.emptySet();
+        return records;
     }
 }
