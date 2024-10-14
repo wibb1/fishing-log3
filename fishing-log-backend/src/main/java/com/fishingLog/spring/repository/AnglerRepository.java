@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface AnglerRepository extends JpaRepository<Angler, Long> {
     Optional<Angler> findByEmail(String email);
+
+    Optional<Angler> findByUsername(String username);
 }

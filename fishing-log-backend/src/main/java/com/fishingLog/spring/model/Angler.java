@@ -22,9 +22,11 @@ public class Angler {
     @Column(nullable = false)
     private String lastName;
     @Column(nullable = false)
-    private String userName;
+    private String username;
     @Column(nullable = false)
     private String email;
+    @Column(nullable = false)
+    private String role;
     @Column(nullable = false)
     private String encryptedPassword;
     @Column(nullable = false)
@@ -36,12 +38,13 @@ public class Angler {
     @ManyToMany
     private Set<Record> records;
 
-    public Angler(Long id, String firstName, String lastName, String userName, String email, String encryptedPassword, String salt, Instant createdAt, Instant updatedAt) {
+    public Angler(Long id, String firstName, String lastName, String username, String email, String role, String encryptedPassword, String salt, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.userName = userName;
+        this.username = username;
         this.email = email;
+        this.role = role;
         this.encryptedPassword = encryptedPassword;
         this.salt = salt;
         this.createdAt = createdAt;

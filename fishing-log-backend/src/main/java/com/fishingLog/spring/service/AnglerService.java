@@ -24,7 +24,7 @@ public class AnglerService {
 
     public Angler saveAngler(Angler angler) {
         Optional<Angler> savedAngler = anglerRepository.findByEmail(angler.getEmail());
-        if(savedAngler.isPresent()){
+        if(savedAngler.isPresent()) {
             throw new DataIntegrityViolationException("Angler already exist with given email:" + angler.getEmail());
         }
         return anglerRepository.save(angler);
