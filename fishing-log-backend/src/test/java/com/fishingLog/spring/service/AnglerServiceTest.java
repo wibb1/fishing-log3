@@ -19,7 +19,7 @@ import java.time.Instant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest(classes = FishingLogApplication.class) // No need for classes attribute
+@SpringBootTest(classes = FishingLogApplication.class)
 @AutoConfigureMockMvc
 @Testcontainers
 @ActiveProfiles("test")
@@ -41,7 +41,7 @@ public class AnglerServiceTest extends BaseIntegrationTest {
 
     @AfterEach
     public void stop() {
-        repository.deleteAll(); // Optional if using @Transactional
+        repository.deleteAll();
         angler = null;
     }
 
