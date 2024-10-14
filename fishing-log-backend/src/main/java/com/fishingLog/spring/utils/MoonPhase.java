@@ -2,6 +2,7 @@ package com.fishingLog.spring.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.Embeddable;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +12,7 @@ import java.time.Instant;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 @Embeddable
 public class MoonPhase implements Serializable {
     @Serial

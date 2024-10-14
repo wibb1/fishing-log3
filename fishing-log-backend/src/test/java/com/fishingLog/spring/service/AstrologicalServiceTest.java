@@ -9,32 +9,27 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.Example;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.IOException;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.*;
 
-@ContextConfiguration(classes = FishingLogApplication.class)
-@ExtendWith(MockitoExtension.class)
-@DataJpaTest
-public class AstrologicalServiceTest {
-    @Mock
+@SpringBootTest(classes = FishingLogApplication.class)
+@AutoConfigureMockMvc
+@Testcontainers
+@ActiveProfiles("test")
+public class AstrologicalServiceTest extends BaseIntegrationTest {
+    @Autowired
     public AstrologicalRepository repository;
 
-    @InjectMocks
+    @Autowired
     AstrologicalService service;
 
     ResponseDataForTest responseDataForTest = new ResponseDataForTest();
@@ -42,7 +37,7 @@ public class AstrologicalServiceTest {
     private Astrological astrological;
 
     @BeforeEach
-    public void setup() throws IOException {
+    public void start() throws IOException {
         JsonNode actualObj = responseDataForTest.getData();
         JsonNode dataJson = actualObj.get(2).get("data").get(0);
         JsonNode metaJson = actualObj.get(1).get("meta").get("station");
@@ -51,7 +46,7 @@ public class AstrologicalServiceTest {
     }
 
     @AfterEach
-    public void teardown() {
+    public void stop() {
         repository.deleteAll();
         astrological = null;
     }
@@ -59,23 +54,19 @@ public class AstrologicalServiceTest {
     @DisplayName("JUnit test for saveAstrological method")
     @Test
     public void testAstrologicalIsReturnedAfterSaving() {
-        given(repository.save(astrological)).willReturn(astrological);
-
         Astrological savedAstrological = service.saveAstrological(astrological);
-
         assertThat(savedAstrological).isNotNull();
+
+        Optional<Astrological> retrieved = service.findEqualAstrological(savedAstrological);
+        assertTrue(retrieved.isPresent());
+        assertEquals(savedAstrological, retrieved.get());
     }
 
     @DisplayName("JUnit test for saveAstrological method when duplicate it returns existing Astrological")
     @Test
     public void testAstrologicalIsDuplicateDoesNotSaveDuplicate() {
-        given(repository.findOne(Example.of(astrological)))
-                .willReturn(Optional.of(astrological));
-
         Astrological newAstrological = service.saveAstrological(astrological);
-
         assertEquals(astrological, newAstrological);
-
-        verify(repository, never()).save(any(Astrological.class));
+        assertSame(astrological, newAstrological);
     }
 }
