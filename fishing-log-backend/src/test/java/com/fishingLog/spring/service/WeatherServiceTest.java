@@ -12,27 +12,34 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Example;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-@ContextConfiguration(classes = FishingLogApplication.class)
-@ExtendWith(MockitoExtension.class)
-@DataJpaTest
+@SpringBootTest(classes = FishingLogApplication.class)
+@AutoConfigureMockMvc
+@Testcontainers
+@ActiveProfiles("test")
 public class WeatherServiceTest {
-    @Mock
+    @Autowired
     public WeatherRepository repository;
 
-    @InjectMocks
+    @Autowired
     WeatherService service;
 
     ResponseDataForTest responseDataForTest = new ResponseDataForTest();
@@ -40,12 +47,12 @@ public class WeatherServiceTest {
     private Weather weather;
 
     @BeforeEach
-    public void setup() {
+    public void start() {
         weather = new Weather(responseDataForTest.getWeatherMapTest());
     }
 
     @AfterEach
-    public void teardown() {
+    public void stop() {
         repository.deleteAll();
         weather = null;
     }
@@ -53,23 +60,22 @@ public class WeatherServiceTest {
     @DisplayName("JUnit test for saveWeather method")
     @Test
     public void testWeatherIsReturnedAfterSaving() {
-        given(repository.save(weather)).willReturn(weather);
-
         Weather savedWeather = service.saveWeather(weather);
-
         assertThat(savedWeather).isNotNull();
+
+        Optional<Weather> retrieved = service.findWeather(savedWeather.getId());
+        assertTrue(retrieved.isPresent());
+        assertEquals(savedWeather, retrieved.get());
     }
 
     @DisplayName("JUnit test for saveWeather method when duplicate it returns existing Weather")
     @Test
     public void testWeatherIsDuplicateDoesNotSaveDuplicate() {
-        given(repository.findOne(Example.of(weather)))
-                .willReturn(Optional.of(weather));
+        Weather savedWeather = service.saveWeather(weather);
+        assertEquals(weather, savedWeather);
 
-        Weather newWeather = service.saveWeather(weather);
-
-        assertEquals(weather, newWeather);
-
-        verify(repository, never()).save(any(Weather.class));
+        Optional<Weather> retrieved = service.findWeather(savedWeather.getId());
+        assertTrue(retrieved.isPresent());
+        assertEquals(savedWeather, retrieved.get());
     }
 }
