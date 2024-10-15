@@ -6,12 +6,13 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode(exclude ={"id",})
 @Entity
 @Table(name = "tide")
 public class Tide {
@@ -50,5 +51,28 @@ public class Tide {
         this.height = data.get("height").asDouble();
         this.setTimeWithString(data.get("time").asText());
         this.type = data.get("type").asText();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Tide tide)) return false;
+
+        if (getHeight() != null ? !getHeight().equals(tide.getHeight()) : tide.getHeight() != null) return false;
+        if (getTime() != null ? !isTimeEqual(tide) : tide.getHeight() != null) return false;  // Use a custom method to check time equality
+        if (getType() != null ? !getType().equals(tide.getType()) : tide.getType() != null) return false;
+        if (getRecord() != null ? !getRecord().equals(tide.getRecord()) : tide.getRecord() != null) return false;
+        return getTideStation() != null ? getTideStation().equals(tide.getTideStation()) : tide.getTideStation() == null;
+    }
+    private boolean isTimeEqual(Tide tide) {
+        if (this.time == null || tide.time == null) {
+            return this.time == tide.time; // Both are null or one is null
+        }
+        // Check if the time is within one hour
+        return ChronoUnit.MINUTES.between(this.time, tide.time) <= 30;
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(getHeight(), time, getType(), getRecord(), getTideStation());
     }
 }

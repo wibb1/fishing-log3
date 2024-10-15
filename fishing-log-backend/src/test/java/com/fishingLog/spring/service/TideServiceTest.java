@@ -7,43 +7,40 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.Example;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Instant;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ContextConfiguration(classes = FishingLogApplication.class)
-@ExtendWith(MockitoExtension.class)
-@DataJpaTest
-public class TideServiceTest {
-    @Mock
+@SpringBootTest(classes = FishingLogApplication.class)
+@AutoConfigureMockMvc
+@Testcontainers
+@ActiveProfiles("test")
+public class TideServiceTest extends BaseIntegrationTest {
+    @Autowired
     public TideRepository repository;
 
-    @InjectMocks
+    @Autowired
     TideService service;
 
     private Tide tide;
 
     @BeforeEach
-    public void setup() {
-        tide = new Tide(1.2, Instant.now() , "Gamgee");
+    public void start() {
+        Instant instant = Instant.now();
+        tide = new Tide(1.2, instant , "Gamgee");
     }
 
     @AfterEach
-    public void teardown() {
+    public void stop() {
         repository.deleteAll();
         tide = null;
     }
@@ -51,23 +48,32 @@ public class TideServiceTest {
     @DisplayName("JUnit test for saveTide method")
     @Test
     public void testTideIsReturnedAfterSaving() {
-        given(repository.save(tide)).willReturn(tide);
-
         Tide savedTide = service.saveTide(tide);
-
         assertThat(savedTide).isNotNull();
+
+        Optional<Tide> retrieved = service.findEqualTide(savedTide);
+        assertTrue(retrieved.isPresent());
+        assertEquals(savedTide, retrieved.get());
     }
 
     @DisplayName("JUnit test for saveTide method when duplicate it returns existing Tide")
     @Test
     public void testTideIsDuplicateDoesNotSaveDuplicate() {
-        given(repository.findOne(Example.of(tide)))
-                .willReturn(Optional.of(tide));
+        Tide savedTide = service.saveTide(tide);
+        assertEquals(tide, savedTide);
 
-        Tide newTide = service.saveTide(tide);
+        Optional<Tide> retrieved = service.findEqualTide(savedTide);
+        assertTrue(retrieved.isPresent());
+        assertEquals(savedTide.getHeight(), retrieved.get().getHeight());
+        assertEquals(savedTide.getRecord(), retrieved.get().getRecord());
+        assertEquals(savedTide.getTideStation(), retrieved.get().getTideStation());
+        assertEquals(savedTide.getType(), retrieved.get().getType());
 
-        assertEquals(tide, newTide);
+        Instant expectedTime = savedTide.getTime();
+        Instant actualTime = retrieved.get().getTime();
 
-        verify(repository, never()).save(any(Tide.class));
+        assertTrue(expectedTime.minusMillis(1).isBefore(actualTime) &&
+                        expectedTime.plusMillis(1).isAfter(actualTime),
+                "createdAt timestamps do not match within tolerance.");
     }
 }
