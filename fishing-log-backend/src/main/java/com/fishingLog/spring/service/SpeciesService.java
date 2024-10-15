@@ -3,6 +3,7 @@ package com.fishingLog.spring.service;
 import com.fishingLog.spring.model.Species;
 import com.fishingLog.spring.repository.SpeciesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,13 +22,13 @@ public class SpeciesService {
         return speciesRepository.findById(id);
     }
 
-    public Optional<Species> findSpeciesByScientificName(String scientificName) {
-        return speciesRepository.findByScientificName(scientificName);
+    public Optional<Species> findEqualSpecies(Species a) {
+        return speciesRepository.findOne(Example.of(a));
     }
 
     public Species saveSpecies(Species species) {
-        Optional<Species> savedSpecies = speciesRepository.findByScientificName(species.getScientificName());
-        return savedSpecies.orElseGet(() -> speciesRepository.save(species));
+        Optional<Species> equalSpecies = findEqualSpecies(species);
+        return equalSpecies.orElseGet(() -> speciesRepository.save(species));
     }
 
     public List<Species> saveSpecies(List<Species> species) {

@@ -7,43 +7,41 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Instant;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ContextConfiguration(classes = FishingLogApplication.class)
-@ExtendWith(MockitoExtension.class)
-@DataJpaTest
-public class SpeciesServiceTest {
-    @Mock
+@SpringBootTest(classes = FishingLogApplication.class)
+@AutoConfigureMockMvc
+@Testcontainers
+@ActiveProfiles("test")
+public class SpeciesServiceTest extends BaseIntegrationTest {
+    @Autowired
     public SpeciesRepository repository;
 
-    @InjectMocks
+    @Autowired
     SpeciesService service;
 
     private Species species;
 
     @BeforeEach
-    public void setup() {
-        species = new Species(1L, "Samwise" , "Gamgee", 10,
-                20,  Instant.now(), Instant.now());
+    public void start() {
+        Instant fixedInstant = Instant.parse("2024-10-15T00:33:20.060972Z");
+        species = new Species(1L, "Samwise", "Gamgee", 10,
+                20, fixedInstant, fixedInstant);
     }
 
     @AfterEach
-    public void teardown() {
+    public void stop() {
         repository.deleteAll();
         species = null;
     }
@@ -51,24 +49,39 @@ public class SpeciesServiceTest {
     @DisplayName("JUnit test for saveSpecies method")
     @Test
     public void testSpeciesIsReturnedAfterSaving() {
-        given(repository.save(species)).willReturn(species);
-
         Species savedSpecies = service.saveSpecies(species);
-
         assertThat(savedSpecies).isNotNull();
+
+        Optional<Species> retrieved = service.findSpeciesById(savedSpecies.getId());
+        assertTrue(retrieved.isPresent());
+        assertEquals(savedSpecies, retrieved.get());
     }
 
     @DisplayName("JUnit test for saveSpecies method when duplicate it returns existing Species")
     @Test
     public void testSpeciesIsDuplicateDoesNotSaveDuplicate() {
-        given(repository.findByScientificName(species.getScientificName()))
-                .willReturn(Optional.of(species));
+        Species savedSpecies = service.saveSpecies(species);
+        assertEquals(species, savedSpecies);
 
-        Species newSpecies = service.saveSpecies(species);
+        Optional<Species> retrieved = service.findSpeciesById(savedSpecies.getId());
+        assertTrue(retrieved.isPresent());
+        assertEquals(savedSpecies.getId(), retrieved.get().getId());
+        assertEquals(savedSpecies.getCommonName(), retrieved.get().getCommonName());
+        assertEquals(savedSpecies.getScientificName(), retrieved.get().getScientificName());
+        assertEquals(savedSpecies.getShallowDepth(), retrieved.get().getShallowDepth());
+        assertEquals(savedSpecies.getDeepDepth(), retrieved.get().getDeepDepth());
 
-        assertEquals(species, newSpecies);
+        Instant expectedCreatedAt = savedSpecies.getCreatedAt();
+        Instant actualCreatedAt = retrieved.get().getCreatedAt();
+        Instant expectedUpdatedAt = savedSpecies.getUpdatedAt();
+        Instant actualUpdatedAt = retrieved.get().getUpdatedAt();
 
-        verify(repository, never()).save(any(Species.class));
+        assertTrue(expectedCreatedAt.minusMillis(1).isBefore(actualCreatedAt) &&
+                        expectedCreatedAt.plusMillis(1).isAfter(actualCreatedAt),
+                "createdAt timestamps do not match within tolerance.");
+
+        assertTrue(expectedUpdatedAt.minusMillis(1).isBefore(actualUpdatedAt) &&
+                        expectedUpdatedAt.plusMillis(1).isAfter(actualUpdatedAt),
+                "updatedAt timestamps do not match within tolerance.");
     }
-
 }
