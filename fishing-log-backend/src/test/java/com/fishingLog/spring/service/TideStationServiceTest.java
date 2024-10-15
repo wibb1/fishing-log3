@@ -7,42 +7,38 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.Example;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ContextConfiguration(classes = FishingLogApplication.class)
-@ExtendWith(MockitoExtension.class)
-@DataJpaTest
-public class TideStationServiceTest {
-    @Mock
+@SpringBootTest(classes = FishingLogApplication.class)
+@AutoConfigureMockMvc
+@Testcontainers
+@ActiveProfiles("test")
+public class TideStationServiceTest extends BaseIntegrationTest {
+    @Autowired
     public TideStationRepository repository;
 
-    @InjectMocks
+    @Autowired
     TideStationService service;
 
     private TideStation tideStation;
 
     @BeforeEach
-    public void setup() {
+    public void start() {
         tideStation = new TideStation(70.2, 70.2, "Gamgee", "SamGamgee");
     }
 
     @AfterEach
-    public void teardown() {
+    public void stop() {
         repository.deleteAll();
         tideStation = null;
     }
@@ -50,23 +46,22 @@ public class TideStationServiceTest {
     @DisplayName("JUnit test for saveTideStation method")
     @Test
     public void testTideStationIsReturnedAfterSaving() {
-        given(repository.save(tideStation)).willReturn(tideStation);
-
         TideStation savedTideStation = service.saveTideStation(tideStation);
-
         assertThat(savedTideStation).isNotNull();
+
+        Optional<TideStation> retrieved = service.findEqualTideStation(savedTideStation);
+        assertTrue(retrieved.isPresent());
+        assertEquals(savedTideStation, retrieved.get());
     }
 
     @DisplayName("JUnit test for saveTideStation method when duplicate it returns existing TideStation")
     @Test
     public void testTideStationIsDuplicateDoesNotSaveDuplicate() {
-        given(repository.findOne(Example.of(tideStation)))
-                .willReturn(Optional.of(tideStation));
+        TideStation savedTideStation = service.saveTideStation(tideStation);
+        assertEquals(tideStation, savedTideStation);
 
-        TideStation newTideStation = service.saveTideStation(tideStation);
-
-        assertEquals(tideStation, newTideStation);
-
-        verify(repository, never()).save(any(TideStation.class));
+        Optional<TideStation> retrieved = service.findEqualTideStation(savedTideStation);
+        assertTrue(retrieved.isPresent());
+        assertEquals(savedTideStation, retrieved.get());
     }
 }
