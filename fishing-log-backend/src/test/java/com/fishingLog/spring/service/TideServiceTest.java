@@ -14,6 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -75,5 +76,52 @@ public class TideServiceTest extends BaseIntegrationTest {
         assertTrue(expectedTime.minusMillis(1).isBefore(actualTime) &&
                         expectedTime.plusMillis(1).isAfter(actualTime),
                 "createdAt timestamps do not match within tolerance.");
+    }
+
+    @DisplayName("JUnit test for updateTide method")
+    @Test
+    public void testTideIsUpdatedSuccessfully() {
+        Tide savedTide = service.saveTide(tide);
+        savedTide.setHeight(1.2);
+        Tide updatedTide = service.saveTide(savedTide);
+
+        assertThat(updatedTide).isNotNull();
+        assertThat(updatedTide.getHeight()).isEqualTo(1.2);
+
+
+    }
+
+    @DisplayName("JUnit test for deleteTide method")
+    @Test
+    public void testTideIsDeletedSuccessfully() {
+        Tide savedTide = service.saveTide(tide);
+        service.deleteTide(savedTide.getId());
+
+        assertThat(repository.findById(savedTide.getId())).isEmpty();
+    }
+
+    @DisplayName("JUnit test for findTideById method")
+    @Test
+    public void testFindTideById() {
+        Tide savedTide = service.saveTide(tide);
+        Optional<Tide> foundTide = service.findTideById(savedTide.getId());
+
+        assertThat(foundTide).isPresent();
+        assertThat(foundTide.get().getId()).isEqualTo(savedTide.getId());
+    }
+
+    @DisplayName("JUnit test for findAllTide method")
+    @Test
+    public void testFindAllTide() {
+        service.saveTide(tide);
+        Tide anotherTide = new Tide();
+        anotherTide.setHeight(10D);
+        anotherTide.setTime(Instant.now());
+        anotherTide.setType("Nothing Used");
+        service.saveTide(anotherTide);
+
+        List<Tide> astrologicalList = service.findAllTide();
+
+        assertThat(astrologicalList.size()).isEqualTo(2);
     }
 }

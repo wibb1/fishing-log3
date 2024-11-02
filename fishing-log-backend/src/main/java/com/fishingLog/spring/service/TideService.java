@@ -14,11 +14,11 @@ public class TideService {
     @Autowired
     public TideRepository tideRepository;
 
-    public List<Tide> findAllTides() {
+    public List<Tide> findAllTide() {
         return tideRepository.findAll();
     }
 
-    public Optional<Tide> findTide(Long id) {
+    public Optional<Tide> findTideById(Long id) {
         return tideRepository.findById(id);
     }
 
