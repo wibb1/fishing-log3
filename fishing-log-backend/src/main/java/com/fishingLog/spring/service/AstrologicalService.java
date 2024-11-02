@@ -18,7 +18,7 @@ public class AstrologicalService {
         return astrologicalRepository.findAll();
     }
 
-    public Optional<Astrological> findAstrological(Long id) {
+    public Optional<Astrological> findAstrologicalById(Long id) {
         return astrologicalRepository.findById(id);
     }
 
@@ -27,11 +27,33 @@ public class AstrologicalService {
     }
 
     public Astrological saveAstrological(Astrological astrological) {
-            Optional<Astrological> equalAstrological = findEqualAstrological(astrological);
-            return equalAstrological.orElseGet(() -> astrologicalRepository.save(astrological));
-        }
+        Optional<Astrological> equalAstrological = findEqualAstrological(astrological);
+        return equalAstrological.orElseGet(() -> astrologicalRepository.save(astrological));
+    }
 
     public void deleteAstrological(Long id) {
         astrologicalRepository.deleteById(id);
+    }
+
+    public Astrological updateAstrological(Astrological astrologicalDetails) {
+
+        Astrological existingAstrological = astrologicalRepository.findById(astrologicalDetails.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Astrological not found with id: " + astrologicalDetails.getId()));
+
+        existingAstrological.setAstronomicalDawn(astrologicalDetails.getAstronomicalDawn());
+        existingAstrological.setAstronomicalDusk(astrologicalDetails.getAstronomicalDusk());
+        existingAstrological.setCivilDawn(astrologicalDetails.getCivilDawn());
+        existingAstrological.setCivilDusk(astrologicalDetails.getCivilDusk());
+        existingAstrological.setClosestMoonPhase(astrologicalDetails.getClosestMoonPhase());
+        existingAstrological.setCurrentMoonPhase(astrologicalDetails.getCurrentMoonPhase());
+        existingAstrological.setMoonrise(astrologicalDetails.getMoonrise());
+        existingAstrological.setMoonset(astrologicalDetails.getMoonset());
+        existingAstrological.setRecord(astrologicalDetails.getRecord());
+        existingAstrological.setSunrise(astrologicalDetails.getSunrise());
+        existingAstrological.setSunset(astrologicalDetails.getSunset());
+        existingAstrological.setTideStation(astrologicalDetails.getTideStation());
+        existingAstrological.setTime(astrologicalDetails.getTime());
+
+        return astrologicalRepository.save(existingAstrological);
     }
 }

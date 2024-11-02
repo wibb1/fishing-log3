@@ -21,6 +21,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -88,4 +90,58 @@ public class AstrologicalServiceTest extends BaseIntegrationTest {
         Astrological newAstrological = service.saveAstrological(astrological);
         assertThat(newAstrological).isEqualTo(astrological);
     }
+
+    @DisplayName("JUnit test for updateAstrological method")
+    @Test
+    public void testAstrologicalIsUpdatedSuccessfully() {
+        Instant testInstant = Instant.now();
+        Astrological savedAstrological = service.saveAstrological(astrological);
+        savedAstrological.setSunrise(testInstant);
+        Astrological updatedAstrological = service.updateAstrological(savedAstrological);
+
+        assertThat(updatedAstrological).isNotNull();
+        assertThat(updatedAstrological.getSunrise()).isEqualTo(testInstant);
+    }
+
+    @DisplayName("JUnit test for deleteAstrological method")
+    @Test
+    public void testAstrologicalIsDeletedSuccessfully() {
+        Astrological savedAstrological = service.saveAstrological(astrological);
+        service.deleteAstrological(savedAstrological.getId());
+
+        assertThat(repository.findById(savedAstrological.getId())).isEmpty();
+    }
+
+    @DisplayName("JUnit test for findAstrologicalById method")
+    @Test
+    public void testFindAstrologicalById() {
+        Astrological savedAstrological = service.saveAstrological(astrological);
+        Optional<Astrological> foundAstrological = service.findAstrologicalById(savedAstrological.getId());
+
+        assertThat(foundAstrological).isPresent();
+        assertThat(foundAstrological.get().getId()).isEqualTo(savedAstrological.getId());
+    }
+
+    @DisplayName("JUnit test for findAllAstrological method")
+    @Test
+    public void testFindAllAstrological() {
+        service.saveAstrological(astrological);
+        Instant time = Instant.parse("2024-11-01T18:35:24.00Z");
+        Astrological anotherAstrological = new Astrological(/* initialize with different data */);
+        anotherAstrological.setAstronomicalDawn(time);
+        anotherAstrological.setAstronomicalDusk(time);
+        anotherAstrological.setCivilDawn(time);
+        anotherAstrological.setCivilDusk(time);
+        anotherAstrological.setMoonrise(time);
+        anotherAstrological.setMoonset(time);
+        anotherAstrological.setSunrise(time);
+        anotherAstrological.setSunset(time);
+        anotherAstrological.setTime(time);
+        service.saveAstrological(anotherAstrological);
+
+        List<Astrological> astrologicalList = service.findAllAstrological();
+
+        assertThat(astrologicalList.size()).isEqualTo(2);
+    }
+
 }
