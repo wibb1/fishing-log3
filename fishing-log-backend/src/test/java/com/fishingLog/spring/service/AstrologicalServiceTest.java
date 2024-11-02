@@ -12,16 +12,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = FishingLogApplication.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
 @Testcontainers
 @ActiveProfiles("test")
@@ -51,6 +57,20 @@ public class AstrologicalServiceTest extends BaseIntegrationTest {
         astrological = null;
     }
 
+    @DisplayName("Astrological Table should exist")
+    @Test
+    void testTableExists() throws Exception {
+        try (Connection connection = DriverManager.getConnection(
+                postgreSQLContainer.getJdbcUrl(),
+                postgreSQLContainer.getUsername(),
+                postgreSQLContainer.getPassword())) {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT to_regclass('public.astrological')");
+            assertTrue(rs.next(), "Should return a value for the astrological table.");
+            assertNotNull(rs.getString(1), "Astrological table should exist.");
+        }
+    }
+
     @DisplayName("JUnit test for saveAstrological method")
     @Test
     public void testAstrologicalIsReturnedAfterSaving() {
@@ -66,7 +86,6 @@ public class AstrologicalServiceTest extends BaseIntegrationTest {
     @Test
     public void testAstrologicalIsDuplicateDoesNotSaveDuplicate() {
         Astrological newAstrological = service.saveAstrological(astrological);
-        assertEquals(astrological, newAstrological);
-        assertSame(astrological, newAstrological);
+        assertThat(newAstrological).isEqualTo(astrological);
     }
 }

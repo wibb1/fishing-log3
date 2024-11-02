@@ -14,9 +14,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest(classes = FishingLogApplication.class)
@@ -45,13 +50,28 @@ public class AnglerServiceTest extends BaseIntegrationTest {
         angler = null;
     }
 
+    @DisplayName("Angler Table should exist")
+    @Test
+    void testTableExists() throws Exception {
+        try (Connection connection = DriverManager.getConnection(
+                postgreSQLContainer.getJdbcUrl(),
+                postgreSQLContainer.getUsername(),
+                postgreSQLContainer.getPassword())) {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT to_regclass('public.angler')");
+            if (rs.next()) {
+                assertNotNull(rs.getString(1), "Angler table should exist.");
+            }
+        }
+    }
+
     @DisplayName("JUnit test for saveAngler method")
     @Test
     public void testAnglerIsReturnedAfterSaving() {
         Angler savedAngler = service.saveAngler(angler);
 
         assertThat(savedAngler).isNotNull();
-        assertThat(savedAngler.getEmail()).isEqualTo(angler.getEmail()); // Additional assertion for validation
+        assertThat(savedAngler.getEmail()).isEqualTo(angler.getEmail());
     }
 
     @DisplayName("JUnit test for saveAngler method which throws exception")

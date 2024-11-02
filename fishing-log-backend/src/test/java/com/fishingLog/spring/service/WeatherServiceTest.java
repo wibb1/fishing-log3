@@ -14,17 +14,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = FishingLogApplication.class)
 @AutoConfigureMockMvc
 @Testcontainers
 @ActiveProfiles("test")
-public class WeatherServiceTest {
+public class WeatherServiceTest extends BaseIntegrationTest {
     @Autowired
     public WeatherRepository repository;
 
@@ -44,6 +47,21 @@ public class WeatherServiceTest {
     public void stop() {
         repository.deleteAll();
         weather = null;
+    }
+
+    @DisplayName("Angler Table should exist")
+    @Test
+    void testTableExists() throws Exception {
+        try (Connection connection = DriverManager.getConnection(
+                postgreSQLContainer.getJdbcUrl(),
+                postgreSQLContainer.getUsername(),
+                postgreSQLContainer.getPassword())) {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT to_regclass('public.weather')");
+            if (rs.next()) {
+                assertNotNull(rs.getString(1), "Angler table should exist.");
+            }
+        }
     }
 
     @DisplayName("JUnit test for saveWeather method")

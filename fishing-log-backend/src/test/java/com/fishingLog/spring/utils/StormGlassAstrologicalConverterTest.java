@@ -1,5 +1,6 @@
 package com.fishingLog.spring.utils;
 
+import com.fishingLog.spring.service.BaseIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -12,7 +13,7 @@ import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-public class StormGlassAstrologicalConverterTest {
+public class StormGlassAstrologicalConverterTest extends BaseIntegrationTest {
     private final ResponseDataForTest response = new ResponseDataForTest();
     private Map<String,Object> actualResponse;
     private Map<String,Object> expectedResponse;

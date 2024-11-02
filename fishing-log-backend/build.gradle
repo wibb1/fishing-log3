@@ -29,7 +29,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-//	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	// Lombok for compile-time annotations
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -38,20 +38,24 @@ dependencies {
 	// PostgreSQL driver
 	runtimeOnly 'org.postgresql:postgresql'
 
-//	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
 	// Springboot security
-//	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 	// Test dependencies
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.junit.jupiter:junit-jupiter-api'
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 	testImplementation 'org.testcontainers:junit-jupiter'
+	testImplementation 'org.testcontainers:testcontainers'
+	testImplementation 'com.zaxxer:HikariCP'
 	testImplementation 'org.testcontainers:postgresql'
+	testImplementation 'com.github.docker-java:docker-java-api'
+	testImplementation 'com.github.docker-java:docker-java-transport-zerodep'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testRuntimeOnly 'org.junit.platform:junit-platform-suite'
 }
 
-tasks.withType(Test) {
+tasks.withType(Test).configureEach {
 	useJUnitPlatform()
 }

@@ -44,13 +44,13 @@ public class Record {
     private Set<Angler> anglers;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "weatherId", referencedColumnName = "id")
+    @JoinColumn(name = "weather_id", referencedColumnName = "id")
     private Weather weather;
 
     @OneToMany(mappedBy = "record", orphanRemoval = true)
     private List<Tide> tides = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "astrologicalId", referencedColumnName = "id")
+    @JoinColumn(name = "astrological_id", referencedColumnName = "id")
     private Astrological astrological;
 }

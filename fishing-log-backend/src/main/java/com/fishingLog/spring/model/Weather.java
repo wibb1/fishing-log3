@@ -15,7 +15,7 @@ import java.util.Map;
 @Setter
 @Getter
 @ToString
-@EqualsAndHashCode(exclude = {"id"})
+@EqualsAndHashCode(exclude = {"id", "records"})
 @NoArgsConstructor
 public class Weather {
     @Id

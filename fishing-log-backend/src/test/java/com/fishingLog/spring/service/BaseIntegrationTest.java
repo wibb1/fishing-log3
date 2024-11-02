@@ -5,10 +5,15 @@ import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.output.Slf4jLogConsumer;
+import org.testcontainers.containers.wait.strategy.Wait;
+
+import java.time.Duration;
 
 @SpringJUnitConfig
 public abstract class BaseIntegrationTest {
@@ -19,21 +24,29 @@ public abstract class BaseIntegrationTest {
             .withCreateContainerCmdModifier(cmd -> {
                 cmd.getHostConfig().withNetworkMode("bridge");
                 cmd.getHostConfig().withPortBindings(new PortBinding(Ports.Binding.bindPort(5433), ExposedPort.tcp(5432)));
-            });
+            })
+            .waitingFor(Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(30)))
+            .withReuse(true)
+            .withLogConsumer(new Slf4jLogConsumer(LoggerFactory.getLogger(BaseIntegrationTest.class)));
 
     @BeforeAll
     static void setup() {
-        postgreSQLContainer.start();
+        if (!postgreSQLContainer.isRunning()) {
+            postgreSQLContainer.start();
+        }
     }
+
     @AfterAll
     static void tearDown() {
-        postgreSQLContainer.stop();
+        if (!postgreSQLContainer.isRunning()) {
+            postgreSQLContainer.stop();
+        }
     }
+
     @DynamicPropertySource
     static void configure(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", () -> "jdbc:postgresql://localhost:" + postgreSQLContainer.getMappedPort(5432) + "/testdb");
+        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
         registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
         registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
     }
-
 }

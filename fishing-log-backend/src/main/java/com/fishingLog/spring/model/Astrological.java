@@ -1,5 +1,6 @@
 package com.fishingLog.spring.model;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -16,7 +17,7 @@ import java.util.Map;
 @NoArgsConstructor
 @Entity
 @ToString
-@EqualsAndHashCode(exclude = {"id"})
+@EqualsAndHashCode(exclude = {"id", "record"})
 @Table(name = "astrological")
 public class Astrological {
     @Id
@@ -42,9 +43,9 @@ public class Astrological {
     private Instant time;
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "text", column = @Column(name = "closest_text")),
-            @AttributeOverride(name = "time", column = @Column(name = "closest_time")),
-            @AttributeOverride(name = "value", column = @Column(name = "closest_value"))
+            @AttributeOverride(name = "text", column = @Column(name = "closest_moon_text")),
+            @AttributeOverride(name = "time", column = @Column(name = "closest_moon_time")),
+            @AttributeOverride(name = "value", column = @Column(name = "closest_moon_value"))
     })
     private MoonPhase closestMoonPhase;
     @Embedded
@@ -56,29 +57,19 @@ public class Astrological {
     private MoonPhase currentMoonPhase;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="tideStationId", referencedColumnName = "id")
+    @JoinColumn(name="tide_station_id", referencedColumnName = "id")
     private TideStation tideStation;
 
     @OneToOne(mappedBy = "astrological")
     private Record record;
 
+    private static final ObjectMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
+
     public Astrological(JsonNode dataJson, JsonNode metaJson) {
-        this.astronomicalDawn = Instant.parse(dataJson.get("astronomicalDawn").asText());
-        this.astronomicalDusk = Instant.parse(dataJson.get("astronomicalDusk").asText());
-        this.civilDawn = Instant.parse(dataJson.get("civilDawn").asText());
-        this.civilDusk = Instant.parse(dataJson.get("civilDusk").asText());
-        this.moonrise = Instant.parse(dataJson.get("moonrise").asText());
-        this.moonset = Instant.parse(dataJson.get("moonset").asText());
-        this.sunrise = Instant.parse(dataJson.get("sunrise").asText());
-        this.sunset = Instant.parse(dataJson.get("sunset").asText());
-        this.time = Instant.parse(dataJson.get("time").asText());
-        ObjectMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
-        this.closestMoonPhase = mapper.convertValue(dataJson.get("moonPhase").get("closest"), MoonPhase.class);
-        this.currentMoonPhase = mapper.convertValue(dataJson.get("moonPhase").get("current"), MoonPhase.class);
-        this.tideStation = new TideStation(metaJson);
+        this(parseJsonToMap(dataJson), new TideStation(metaJson));
     }
 
-    public Astrological(Map<String, Object> map) {
+    public Astrological(Map<String, Object> map, TideStation tideStation) {
         this.astronomicalDawn = Instant.parse((String) map.get("astronomicalDawn"));
         this.astronomicalDusk = Instant.parse((String) map.get("astronomicalDusk"));
         this.civilDawn = Instant.parse((String) map.get("civilDawn"));
@@ -90,39 +81,43 @@ public class Astrological {
         this.time = Instant.parse((String) map.get("time"));
         this.closestMoonPhase = (MoonPhase) map.get("closestMoonPhase");
         this.currentMoonPhase = (MoonPhase) map.get("currentMoonPhase");
-        this.tideStation = (TideStation) map.get("tideStation");
+        this.tideStation = tideStation;
+    }
+
+    private static Map<String, Object> parseJsonToMap(JsonNode json) {
+        return mapper.convertValue(json, new TypeReference<>() {});
     }
 
     public void setAstronomicalDawnWithString(String time) {
-        this.time = Conversions.setTimeWithDateString(time);
+        this.astronomicalDawn = Conversions.setTimeWithDateString(time);
     }
 
     public void setAstronomicalDuskWithString(String time) {
-        this.time = Conversions.setTimeWithDateString(time);
+        this.astronomicalDusk = Conversions.setTimeWithDateString(time);
     }
 
     public void setCivilDawnWithString(String time) {
-        this.time = Conversions.setTimeWithDateString(time);
+        this.civilDawn = Conversions.setTimeWithDateString(time);
     }
 
     public void setCivilDuskWithString(String time) {
-        this.time = Conversions.setTimeWithDateString(time);
+        this.civilDusk = Conversions.setTimeWithDateString(time);
     }
 
     public void setMoonriseWithString(String time) {
-        this.time = Conversions.setTimeWithDateString(time);
+        this.moonrise = Conversions.setTimeWithDateString(time);
     }
 
     public void setMoonsetWithString(String time) {
-        this.time = Conversions.setTimeWithDateString(time);
+        this.moonset = Conversions.setTimeWithDateString(time);
     }
 
     public void setSunriseWithString(String time) {
-        this.time = Conversions.setTimeWithDateString(time);
+        this.sunrise = Conversions.setTimeWithDateString(time);
     }
 
     public void setSunsetWithString(String time) {
-        this.time = Conversions.setTimeWithDateString(time);
+        this.sunset = Conversions.setTimeWithDateString(time);
     }
 
     public void setTimeWithString(String time) {

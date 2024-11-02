@@ -14,24 +14,24 @@ public class AstrologicalService {
         @Autowired
         public AstrologicalRepository astrologicalRepository;
 
-        public List<Astrological> findAllAstrological() {
-            return astrologicalRepository.findAll();
-        }
+    public List<Astrological> findAllAstrological() {
+        return astrologicalRepository.findAll();
+    }
 
-        public Optional<Astrological> findAstrological(Long id) {
-            return astrologicalRepository.findById(id);
-        }
+    public Optional<Astrological> findAstrological(Long id) {
+        return astrologicalRepository.findById(id);
+    }
 
-        public Optional<Astrological> findEqualAstrological(Astrological a) {
-            return astrologicalRepository.findOne(Example.of(a));
-        }
+    public Optional<Astrological> findEqualAstrological(Astrological a) {
+        return astrologicalRepository.findOne(Example.of(a));
+    }
 
-        public Astrological saveAstrological(Astrological astrological) {
+    public Astrological saveAstrological(Astrological astrological) {
             Optional<Astrological> equalAstrological = findEqualAstrological(astrological);
             return equalAstrological.orElseGet(() -> astrologicalRepository.save(astrological));
         }
 
-        public void deleteAstrological(Long id) {
-            astrologicalRepository.deleteById(id);
-        }
+    public void deleteAstrological(Long id) {
+        astrologicalRepository.deleteById(id);
+    }
 }

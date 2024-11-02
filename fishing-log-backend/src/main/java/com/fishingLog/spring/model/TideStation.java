@@ -10,15 +10,24 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode(exclude = {"id"})
 @Entity
-@Table(name = "tideStation", uniqueConstraints = {@UniqueConstraint(columnNames = {"id", "stationName"})})
+@Table(name = "tide_station", uniqueConstraints = {@UniqueConstraint(columnNames = {"station_name"})})
 public class TideStation {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column private String stationName;
-    @Column private Double stationLat;
-    @Column private Double stationLng;
-    @Column private String stationSource;
+
+    @Column(name = "station_name", nullable = false)
+    private String stationName;
+
+    @Column(name = "station_lat", nullable = false)
+    private Double stationLat;
+
+    @Column(name = "station_lng", nullable = false)
+    private Double stationLng;
+
+    @Column(name = "station_source", nullable = false)
+    private String stationSource;
 
     public TideStation(JsonNode stationData) {
         this.stationLat = stationData.get("lat").asDouble();

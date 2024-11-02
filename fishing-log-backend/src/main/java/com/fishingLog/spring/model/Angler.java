@@ -12,7 +12,9 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode(exclude = {"id", "encryptedPassword", "salt", "createdAt", "updatedAt"})
 @ToString(exclude = {"encryptedPassword", "salt"})
-@Table(name="angler")
+@Table(name="angler", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "username"), @UniqueConstraint(columnNames = "email")
+})
 
 public class Angler {
     @Id

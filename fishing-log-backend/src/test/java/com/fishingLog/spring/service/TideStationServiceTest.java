@@ -51,7 +51,7 @@ public class TideStationServiceTest extends BaseIntegrationTest {
 
         Optional<TideStation> retrieved = service.findEqualTideStation(savedTideStation);
         assertTrue(retrieved.isPresent());
-        assertEquals(savedTideStation, retrieved.get());
+        assertThat(retrieved.get()).isEqualTo(savedTideStation);
     }
 
     @DisplayName("JUnit test for saveTideStation method when duplicate it returns existing TideStation")

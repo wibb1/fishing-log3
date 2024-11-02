@@ -30,11 +30,11 @@ public class Tide {
     private String type;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recordid", referencedColumnName = "id")
+    @JoinColumn(name = "record_id", referencedColumnName = "id")
     private Record record;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "tidestationid", referencedColumnName = "id")
+    @JoinColumn(name = "tide_station_id", referencedColumnName = "id")
     private TideStation tideStation;
 
     public void setTimeWithString(String time) {

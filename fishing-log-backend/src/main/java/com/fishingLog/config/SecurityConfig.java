@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,19 +26,17 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        final UserDetails[] userDetails = {null};
         return username -> {
-            Optional<Angler> angler = anglerRepository.findByUsername(username);
-            if (angler == null) {
-                throw new UsernameNotFoundException("Angler not found");
-            }
-            angler.ifPresent(user -> userDetails[0] = org.springframework.security.core.userdetails.User
-                        .withUsername(user.getUsername())
-                        .password(user.getEncryptedPassword())
-                        .roles(user.getRole())
-                        .build());
+            Optional<Angler> anglerOpt = anglerRepository.findByUsername(username);
+            Angler angler = anglerOpt.orElseThrow(() ->
+                    new UsernameNotFoundException("Angler not found: " + username)
+            );
 
-            return userDetails[0];
+            return org.springframework.security.core.userdetails.User
+                    .withUsername(angler.getUsername())
+                    .password(angler.getEncryptedPassword())
+                    .roles(angler.getRole())
+                    .build();
         };
     }
 
@@ -50,17 +47,18 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((requests) -> requests
-                    .requestMatchers("/admin/**").hasRole("ADMIN")
-                    .requestMatchers("/angler/**").hasRole("ANGLER")
-                    .requestMatchers("/", "/home").permitAll()
-                    .anyRequest().authenticated()
+        http.authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/angler/**").hasRole("ANGLER")
+                        .requestMatchers("/hello").hasAnyRole("ANGLER", "ADMIN")
+                        .requestMatchers("/", "/home", "/login", "/knockKnock").permitAll()
+                        .anyRequest().authenticated()
                 )
-                .formLogin((form) -> form
+                .formLogin(form -> form
                         .loginPage("/login")
                         .permitAll()
                 )
-                .logout((logout) -> logout
+                .logout(logout -> logout
                         .permitAll()
                 );
 
