@@ -17,7 +17,7 @@ public class WeatherService {
         return weatherRepository.findAll();
     }
 
-    public Optional<Weather> findWeather(Long id) {
+    public Optional<Weather> findWeatherById(Long id) {
         return weatherRepository.findById(id);
     }
 

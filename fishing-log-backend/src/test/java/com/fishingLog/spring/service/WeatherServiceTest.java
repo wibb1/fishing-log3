@@ -18,6 +18,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -70,7 +72,7 @@ public class WeatherServiceTest extends BaseIntegrationTest {
         Weather savedWeather = service.saveWeather(weather);
         assertThat(savedWeather).isNotNull();
 
-        Optional<Weather> retrieved = service.findWeather(savedWeather.getId());
+        Optional<Weather> retrieved = service.findWeatherById(savedWeather.getId());
         assertTrue(retrieved.isPresent());
         assertEquals(savedWeather, retrieved.get());
     }
@@ -81,8 +83,54 @@ public class WeatherServiceTest extends BaseIntegrationTest {
         Weather savedWeather = service.saveWeather(weather);
         assertEquals(weather, savedWeather);
 
-        Optional<Weather> retrieved = service.findWeather(savedWeather.getId());
+        Optional<Weather> retrieved = service.findWeatherById(savedWeather.getId());
         assertTrue(retrieved.isPresent());
         assertEquals(savedWeather, retrieved.get());
+    }
+
+    @DisplayName("JUnit test for updateWeather method")
+    @Test
+    public void testWeatherIsUpdatedSuccessfully() {
+        Weather savedWeather = service.saveWeather(weather);
+        savedWeather.setPressure(1.2);
+        Weather updatedWeather = service.saveWeather(savedWeather);
+
+        assertThat(updatedWeather).isNotNull();
+        assertThat(updatedWeather.getPressure()).isEqualTo(1.2);
+
+
+    }
+
+    @DisplayName("JUnit test for deleteWeather method")
+    @Test
+    public void testWeatherIsDeletedSuccessfully() {
+        Weather savedWeather = service.saveWeather(weather);
+        service.deleteWeather(savedWeather.getId());
+
+        assertThat(repository.findById(savedWeather.getId())).isEmpty();
+    }
+
+    @DisplayName("JUnit test for findWeatherById method")
+    @Test
+    public void testFindWeatherById() {
+        Weather savedWeather = service.saveWeather(weather);
+        Optional<Weather> foundWeather = service.findWeatherById(savedWeather.getId());
+
+        assertThat(foundWeather).isPresent();
+        assertThat(foundWeather.get().getId()).isEqualTo(savedWeather.getId());
+    }
+
+    @DisplayName("JUnit test for findAllWeather method")
+    @Test
+    public void testFindAllWeather() {
+        service.saveWeather(weather);
+        Weather anotherWeather = new Weather();
+        anotherWeather.setPressure(10D);
+        anotherWeather.setTime(Instant.now());
+        service.saveWeather(anotherWeather);
+
+        List<Weather> astrologicalList = service.findAllWeather();
+
+        assertThat(astrologicalList.size()).isEqualTo(2);
     }
 }
