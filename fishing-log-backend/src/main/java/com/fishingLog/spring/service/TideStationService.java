@@ -14,7 +14,7 @@ public class TideStationService {
     @Autowired
     public TideStationRepository tideStationRepository;
 
-    public List<TideStation> findAllTideStations() {
+    public List<TideStation> findAllTideStation() {
         return tideStationRepository.findAll();
     }
 
