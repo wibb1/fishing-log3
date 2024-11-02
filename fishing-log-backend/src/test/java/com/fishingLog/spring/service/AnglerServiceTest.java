@@ -19,6 +19,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.Instant;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -83,4 +84,48 @@ public class AnglerServiceTest extends BaseIntegrationTest {
         // Attempt to save the same angler again
         assertThrows(DataIntegrityViolationException.class, () -> service.saveAngler(angler));
     }
+
+    @DisplayName("JUnit test for updateAngler method")
+    @Test
+    public void testAnglerIsUpdatedSuccessfully() {
+        Angler savedAngler = service.saveAngler(angler);
+        savedAngler.setLastName("GamgeeUpdated");
+        Angler updatedAngler = service.updateAngler(savedAngler);
+
+        assertThat(updatedAngler).isNotNull();
+        assertThat(updatedAngler.getLastName()).isEqualTo("GamgeeUpdated");
+    }
+
+    @DisplayName("JUnit test for deleteAngler method")
+    @Test
+    public void testAnglerIsDeletedSuccessfully() {
+        Angler savedAngler = service.saveAngler(angler);
+        service.deleteAngler(savedAngler.getId());
+
+        assertThat(repository.findById(savedAngler.getId())).isEmpty();
+    }
+
+    @DisplayName("JUnit test for findAnglerById method")
+    @Test
+    public void testFindAngler() {
+        Angler savedAngler = service.saveAngler(angler);
+        Optional<Angler> foundAngler = service.findAngler(savedAngler.getId());
+
+        assertThat(foundAngler).isNotNull();
+        assertThat(foundAngler.get().getId()).isEqualTo(savedAngler.getId());
+    }
+
+    @DisplayName("JUnit test for findAllAnglers method")
+    @Test
+    public void testFindAllAnglers() {
+        service.saveAngler(angler);
+        Angler anotherAngler = new Angler(2L, "Frodo", "Baggins", "FrodoBaggins",
+                "FrodoBaggins@noplace.com", "USER", "password", "", Instant.now(), Instant.now());
+        service.saveAngler(anotherAngler);
+
+        Iterable<Angler> anglers = service.findAllAnglers();
+
+        assertThat(anglers).hasSize(2);
+    }
+
 }

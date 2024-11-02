@@ -30,6 +30,27 @@ public class AnglerService {
         return anglerRepository.save(angler);
     }
 
+    public Angler updateAngler(Angler anglerDetails) {
+        Angler existingAngler = anglerRepository.findById(anglerDetails.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Angler not found with id: " + anglerDetails.getId()));
+        Optional<Angler> anglerWithEmail = anglerRepository.findByEmail(anglerDetails.getEmail());
+
+        if (anglerWithEmail.isPresent() && !anglerWithEmail.get().getId().equals(anglerDetails.getId())) {
+            throw new DataIntegrityViolationException("Angler already exists with given email: " + anglerDetails.getEmail());
+        }
+
+        existingAngler.setFirstName(anglerDetails.getFirstName());
+        existingAngler.setLastName(anglerDetails.getLastName());
+        existingAngler.setUsername(anglerDetails.getUsername());
+        existingAngler.setEmail(anglerDetails.getEmail());
+        existingAngler.setRole(anglerDetails.getRole());
+        existingAngler.setEncryptedPassword(anglerDetails.getEncryptedPassword());
+        existingAngler.setCreatedAt(anglerDetails.getCreatedAt());
+        existingAngler.setUpdatedAt(anglerDetails.getUpdatedAt());
+
+        return anglerRepository.save(existingAngler);
+    }
+
     public void deleteAngler(Long id) {
         anglerRepository.deleteById(id);
     }
