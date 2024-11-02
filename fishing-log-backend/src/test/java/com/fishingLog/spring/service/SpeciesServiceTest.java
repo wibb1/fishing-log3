@@ -14,6 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -83,5 +84,53 @@ public class SpeciesServiceTest extends BaseIntegrationTest {
         assertTrue(expectedUpdatedAt.minusMillis(1).isBefore(actualUpdatedAt) &&
                         expectedUpdatedAt.plusMillis(1).isAfter(actualUpdatedAt),
                 "updatedAt timestamps do not match within tolerance.");
+    }
+
+    @DisplayName("JUnit test for updateSpecies method")
+    @Test
+    public void testSpeciesIsUpdatedSuccessfully() {
+        Species savedSpecies = service.saveSpecies(species);
+        savedSpecies.setScientificName("FrodoBaggins");
+        Species updatedSpecies = service.saveSpecies(savedSpecies);
+
+        assertThat(updatedSpecies).isNotNull();
+        assertThat(updatedSpecies.getScientificName()).isEqualTo("FrodoBaggins");
+
+
+    }
+
+    @DisplayName("JUnit test for deleteSpecies method")
+    @Test
+    public void testSpeciesIsDeletedSuccessfully() {
+        Species savedSpecies = service.saveSpecies(species);
+        service.deleteSpecies(savedSpecies.getId());
+
+        assertThat(repository.findById(savedSpecies.getId())).isEmpty();
+    }
+
+    @DisplayName("JUnit test for findSpeciesById method")
+    @Test
+    public void testFindSpeciesById() {
+        Species savedSpecies = service.saveSpecies(species);
+        Optional<Species> foundSpecies = service.findSpeciesById(savedSpecies.getId());
+
+        assertThat(foundSpecies).isPresent();
+        assertThat(foundSpecies.get().getId()).isEqualTo(savedSpecies.getId());
+    }
+
+    @DisplayName("JUnit test for findAllSpecies method")
+    @Test
+    public void testFindAllSpecies() {
+        service.saveSpecies(species);
+        Species anotherSpecies = new Species();
+        anotherSpecies.setCommonName("Nothing Used");
+        anotherSpecies.setScientificName("Never Used");
+        anotherSpecies.setShallowDepth(10);
+        anotherSpecies.setDeepDepth(20);
+        service.saveSpecies(anotherSpecies);
+
+        List<Species> astrologicalList = service.findAllSpecies();
+
+        assertThat(astrologicalList.size()).isEqualTo(2);
     }
 }

@@ -17,8 +17,8 @@ public class SpeciesController {
         this.speciesService = speciesService;
     }
     @GetMapping
-    public List<Species> findSpecies() {
-        return speciesService.findSpecies();
+    public List<Species> findAllSpecies() {
+        return speciesService.findAllSpecies();
     }
     @GetMapping("/{id}")
     public Optional<Species> findSpeciesById(@PathVariable("id") Long id) {
@@ -35,7 +35,7 @@ public class SpeciesController {
     @PutMapping(path="/{id}")
     public void updateSpecies(@PathVariable Long id, @RequestBody Species species) {
         Optional<Species> current = speciesService.findSpeciesById(id);
-        if (null != current) {
+        if (current.isPresent()) {
             species.setId(id);
             speciesService.saveSpecies(species);
         }

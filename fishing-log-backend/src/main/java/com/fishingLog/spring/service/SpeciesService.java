@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class SpeciesService {
     @Autowired public SpeciesRepository speciesRepository;
 
-    public List<Species> findSpecies() {
+    public List<Species> findAllSpecies() {
         return speciesRepository.findAll();
     }
 
