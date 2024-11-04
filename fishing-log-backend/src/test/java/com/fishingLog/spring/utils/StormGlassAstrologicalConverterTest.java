@@ -5,12 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class StormGlassAstrologicalConverterTest extends BaseIntegrationTest {
@@ -21,8 +21,16 @@ public class StormGlassAstrologicalConverterTest extends BaseIntegrationTest {
     @Test
     public void astrologicalDataConverterTest() throws IOException {
         StormGlassApiService stormGlassApiService = mock(StormGlassApiService.class);
-        when(stormGlassApiService.obtainData()).thenReturn(Collections.singletonList(response.getDataString()));
-
+        Map<String, List<String>> headers = Map.of(
+                "access-control-allow-origin", List.of("*"),
+                "content-length", List.of("792"),
+                "content-type", List.of("application/json"),
+                "date", List.of("Mon, 04 Nov 2024 02:04:45 GMT"),
+                "server", List.of("gunicorn"),
+                "vary", List.of("Accept-Encoding")
+        );
+        ApiResponse apiResponse = new ApiResponse(200, headers, response.getDataString());
+        when(stormGlassApiService.obtainData()).thenReturn(List.of(apiResponse));
         actualResponse = stormGlassAstrologicalConverter.dataConverter(response.getAstrologicalDataString());
         expectedResponse = response.getAstroMapTest();
 

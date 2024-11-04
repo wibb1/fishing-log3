@@ -1,0 +1,42 @@
+{
+  "data": [
+    {
+      "height": 0.484495766600653,
+      "time": "2024-07-12T04:55:00+00:00",
+      "type": "high"
+    },
+    {
+      "height": -0.3884259370281767,
+      "time": "2024-07-12T10:10:00+00:00",
+      "type": "low"
+    },
+    {
+      "height": 0.5242476943841401,
+      "time": "2024-07-12T17:25:00+00:00",
+      "type": "high"
+    },
+    {
+      "height": -0.2936569385171069,
+      "time": "2024-07-12T22:40:00+00:00",
+      "type": "low"
+    }
+  ],
+  "meta": {
+    "cost": 1,
+    "dailyQuota": 50,
+    "datum": "MSL",
+    "end": "2024-07-12 23:59",
+    "lat": 41.6,
+    "lng": -70.8,
+    "offset": 0,
+    "requestCount": 6,
+    "start": "2024-07-12 00:00",
+    "station": {
+      "distance": 8,
+      "lat": 41.5933,
+      "lng": -70.9,
+      "name": "new bedford, clarks point, ma",
+      "source": "noaa"
+    }
+  }
+}

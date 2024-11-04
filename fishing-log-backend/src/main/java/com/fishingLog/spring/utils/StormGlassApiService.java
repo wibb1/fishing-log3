@@ -12,6 +12,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class StormGlassApiService {
     private static final String weatherRequest = "airTemperature,pressure,cloudCover,currentDirection,currentSpeed,gust,humidity,seaLevel,visibility,windDirection,windSpeed,seaLevel,swellDirection,swellHeight,swellPeriod,secondarySwellDirection,secondarySwellHeight,secondarySwellPeriod,waveDirection,waveHeight,wavePeriod,windWaveDirection,windWaveHeight,windWavePeriod";
@@ -20,31 +21,36 @@ public class StormGlassApiService {
     private final Instant parsedTime;
     private final Double latitude;
     private final Double longitude;
-    public StormGlassApiService(Instant parsedTime,
-                                Double latitude,
-                                Double longitude) {
+
+    public StormGlassApiService(Instant parsedTime, Double latitude, Double longitude) {
         this.parsedTime = parsedTime;
         this.latitude = latitude;
         this.longitude = longitude;
     }
-    public List<String> obtainData() {
-        HttpResponse<String> response = null;
-        List<String> responses = new ArrayList<>();
+
+    public List<ApiResponse> obtainData() {
+        List<ApiResponse> responses = new ArrayList<>();
         for (String request : requestTypes) {
-            HttpRequest httpRequest;
             try {
-                httpRequest = HttpRequest.newBuilder()
+                HttpRequest httpRequest = HttpRequest.newBuilder()
                         .uri(URI.create(createUrl(request)))
                         .header("Authorization", ENVVariables.getStormGlassApiKey())
                         .method("GET", HttpRequest.BodyPublishers.noBody())
                         .build();
-                response = HttpClient.newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString());
-                if (response == null || response.body() == null || response.statusCode() != 200 || responses.contains("errors")) throw new IOException();
-            } catch (IOException | InterruptedException e) {
-                System.out.println(response.body());
+                HttpResponse<String> response = HttpClient.newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString());
+                if (response == null || response.body() == null || response.statusCode() != 200) {
+                    ApiResponse apiResponse = new ApiResponse(response.statusCode(), response.headers().map(), response.body());
+                    apiResponse.setErrors(Map.of("Error in "+ request, "Error fetching data for " + request));
+                    responses.add(apiResponse);
+                } else {
+                    responses.add(new ApiResponse(response.statusCode(), response.headers().map(), response.body()));
+                }
+            } catch(IOException | InterruptedException e){
                 e.printStackTrace();
+                ApiResponse apiResponse = new ApiResponse(500, null, null);
+                apiResponse.setErrors(Map.of("exception", "Exception occurred: " + e.getMessage()));
+                responses.add(apiResponse);
             }
-            responses.add(response.body());
         }
         return responses;
     }

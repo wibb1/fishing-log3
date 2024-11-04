@@ -5,7 +5,7 @@ import com.fishingLog.spring.model.TideStation;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,8 +21,16 @@ public class StormGlassTideConverterTest {
     @Test
     public void tideDataConverterTest() throws IOException {
         StormGlassApiService stormGlassApiService = mock(StormGlassApiService.class);
-        when(stormGlassApiService.obtainData()).thenReturn(Collections.singletonList(response.getDataString()));
-
+        Map<String, List<String>> headers = Map.of(
+                "access-control-allow-origin", List.of("*"),
+                "content-length", List.of("583"),
+                "content-type", List.of("application/json"),
+                "date", List.of("Mon, 04 Nov 2024 02:04:39 GMT"),
+                "server", List.of("gunicorn"),
+                "vary", List.of("Accept-Encoding")
+        );
+        ApiResponse apiResponse = new ApiResponse(200, headers, response.getDataString());
+        when(stormGlassApiService.obtainData()).thenReturn(List.of(apiResponse));
         actualResponse = stormGlassTideConverter.dataConverter(response.getTideDataString());
         expectedResponse = response.getTideMapTest();
 

@@ -1,0 +1,114 @@
+{
+  "hours": [
+    {
+      "airTemperature": {
+        "sg": 23.38
+      },
+      "cloudCover": {
+        "sg": 43.7
+      },
+      "currentDirection": {
+        "sg": 321.8
+      },
+      "currentSpeed": {
+        "sg": 0.06
+      },
+      "gust": {
+        "sg": 13.53
+      },
+      "humidity": {
+        "sg": 90.9
+      },
+      "pressure": {
+        "sg": 1022.44
+      },
+      "seaLevel": {
+        "sg": -0.54
+      },
+      "secondarySwellDirection": {
+        "sg": 173.39
+      },
+      "secondarySwellHeight": {
+        "sg": 0.09
+      },
+      "secondarySwellPeriod": {
+        "sg": 8.71
+      },
+      "swellDirection": {
+        "sg": 175.11
+      },
+      "swellHeight": {
+        "sg": 0.18
+      },
+      "swellPeriod": {
+        "sg": 5.82
+      },
+      "time": "2024-07-12T21:00:00+00:00",
+      "visibility": {
+        "sg": 24.13
+      },
+      "waveDirection": {
+        "sg": 195.18
+      },
+      "waveHeight": {
+        "sg": 0.76
+      },
+      "wavePeriod": {
+        "sg": 4.67
+      },
+      "windDirection": {
+        "sg": 211.35
+      },
+      "windSpeed": {
+        "sg": 7.16
+      },
+      "windWaveDirection": {
+        "sg": 203.34
+      },
+      "windWaveHeight": {
+        "sg": 0.76
+      },
+      "windWavePeriod": {
+        "sg": 5.36
+      }
+    }
+  ],
+  "meta": {
+    "cost": 1,
+    "dailyQuota": 50,
+    "end": "2024-07-12 21:00",
+    "lat": 41.6,
+    "lng": -70.8,
+    "params": [
+      "airTemperature",
+      "pressure",
+      "cloudCover",
+      "currentDirection",
+      "currentSpeed",
+      "gust",
+      "humidity",
+      "seaLevel",
+      "visibility",
+      "windDirection",
+      "windSpeed",
+      "seaLevel",
+      "swellDirection",
+      "swellHeight",
+      "swellPeriod",
+      "secondarySwellDirection",
+      "secondarySwellHeight",
+      "secondarySwellPeriod",
+      "waveDirection",
+      "waveHeight",
+      "wavePeriod",
+      "windWaveDirection",
+      "windWaveHeight",
+      "windWavePeriod"
+    ],
+    "requestCount": 5,
+    "source": [
+      "sg"
+    ],
+    "start": "2024-07-12 21:00"
+  }
+}
