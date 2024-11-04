@@ -7,8 +7,25 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fishingLog.spring.utils.Conversions;
 import com.fishingLog.spring.utils.MoonPhase;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.time.Instant;
 import java.util.Map;
 
@@ -88,39 +105,18 @@ public class Astrological {
         return mapper.convertValue(json, new TypeReference<>() {});
     }
 
-    public void setAstronomicalDawnWithString(String time) {
-        this.astronomicalDawn = Conversions.setTimeWithDateString(time);
-    }
-
-    public void setAstronomicalDuskWithString(String time) {
-        this.astronomicalDusk = Conversions.setTimeWithDateString(time);
-    }
-
-    public void setCivilDawnWithString(String time) {
-        this.civilDawn = Conversions.setTimeWithDateString(time);
-    }
-
-    public void setCivilDuskWithString(String time) {
-        this.civilDusk = Conversions.setTimeWithDateString(time);
-    }
-
-    public void setMoonriseWithString(String time) {
-        this.moonrise = Conversions.setTimeWithDateString(time);
-    }
-
-    public void setMoonsetWithString(String time) {
-        this.moonset = Conversions.setTimeWithDateString(time);
-    }
-
-    public void setSunriseWithString(String time) {
-        this.sunrise = Conversions.setTimeWithDateString(time);
-    }
-
-    public void setSunsetWithString(String time) {
-        this.sunset = Conversions.setTimeWithDateString(time);
-    }
-
-    public void setTimeWithString(String time) {
-        this.time = Conversions.setTimeWithDateString(time);
+    public void setTimeWithString(String field, String time) {
+        switch (field) {
+            case "astronomicalDawn" -> this.astronomicalDawn = Conversions.setTimeWithDateString(time);
+            case "astronomicalDusk" -> this.astronomicalDusk = Conversions.setTimeWithDateString(time);
+            case "civilDawn" -> this.civilDawn = Conversions.setTimeWithDateString(time);
+            case "civilDusk" -> this.civilDusk = Conversions.setTimeWithDateString(time);
+            case "moonrise" -> this.moonrise = Conversions.setTimeWithDateString(time);
+            case "moonset" -> this.moonset = Conversions.setTimeWithDateString(time);
+            case "sunrise" -> this.sunrise = Conversions.setTimeWithDateString(time);
+            case "sunset" -> this.sunset = Conversions.setTimeWithDateString(time);
+            case "time" -> this.time = Conversions.setTimeWithDateString(time);
+            default -> throw new IllegalArgumentException("Invalid field: " + field);
+        }
     }
 }

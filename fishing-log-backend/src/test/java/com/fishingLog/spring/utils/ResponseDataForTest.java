@@ -4,7 +4,8 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fishingLog.spring.model.*;
+import com.fishingLog.spring.model.Tide;
+import com.fishingLog.spring.model.TideStation;
 
 import java.io.File;
 import java.io.IOException;
