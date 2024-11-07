@@ -1,18 +1,16 @@
 package com.fishingLog.config;
 
-import com.fishingLog.spring.model.Angler;
 import com.fishingLog.spring.repository.AnglerRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
-import java.util.Optional;
 
 @Configuration
 @EnableWebSecurity
@@ -26,18 +24,8 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> {
-            Optional<Angler> anglerOpt = anglerRepository.findByUsername(username);
-            Angler angler = anglerOpt.orElseThrow(() ->
-                    new UsernameNotFoundException("Angler not found: " + username)
-            );
-
-            return org.springframework.security.core.userdetails.User
-                    .withUsername(angler.getUsername())
-                    .password(angler.getEncryptedPassword())
-                    .roles(angler.getRole())
-                    .build();
-        };
+        return username -> anglerRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Angler not found: " + username));
     }
 
     @Bean
@@ -58,9 +46,7 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .permitAll()
                 )
-                .logout(logout -> logout
-                        .permitAll()
-                );
+                .logout(LogoutConfigurer::permitAll);
 
         return http.build();
     }

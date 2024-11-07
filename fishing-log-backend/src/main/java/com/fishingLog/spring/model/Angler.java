@@ -13,21 +13,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
 @Setter @Getter
 @Entity
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"id", "encryptedPassword", "salt", "createdAt", "updatedAt"})
-@ToString(exclude = {"encryptedPassword", "salt"})
+@EqualsAndHashCode(exclude = {"id", "password", "createdAt", "updatedAt"})
+@ToString(exclude = {"password"})
 @Table(name="angler", uniqueConstraints = {
         @UniqueConstraint(columnNames = "username"), @UniqueConstraint(columnNames = "email")
 })
 
-public class Angler {
+public class Angler implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,9 +46,7 @@ public class Angler {
     @Column(nullable = false)
     private String role;
     @Column(nullable = false)
-    private String encryptedPassword;
-    @Column(nullable = false)
-    private String salt;
+    private String password;
     @Column(nullable = false)
     private Instant createdAt;
     @Column(nullable = false)
@@ -52,17 +54,21 @@ public class Angler {
     @ManyToMany
     private Set<Record> records;
 
-    public Angler(Long id, String firstName, String lastName, String username, String email, String role, String encryptedPassword, String salt, Instant createdAt, Instant updatedAt) {
+    public Angler(Long id, String firstName, String lastName, String username, String email, String role, String password, String salt, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.email = email;
         this.role = role;
-        this.encryptedPassword = encryptedPassword;
-        this.salt = salt;
+        this.password = password;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
     }
 
     public Set<Record> getRecords() {

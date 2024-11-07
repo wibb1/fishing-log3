@@ -44,7 +44,7 @@ public class AnglerService {
         existingAngler.setUsername(anglerDetails.getUsername());
         existingAngler.setEmail(anglerDetails.getEmail());
         existingAngler.setRole(anglerDetails.getRole());
-        existingAngler.setEncryptedPassword(anglerDetails.getEncryptedPassword());
+        existingAngler.setPassword(anglerDetails.getPassword());
         existingAngler.setCreatedAt(anglerDetails.getCreatedAt());
         existingAngler.setUpdatedAt(anglerDetails.getUpdatedAt());
 
