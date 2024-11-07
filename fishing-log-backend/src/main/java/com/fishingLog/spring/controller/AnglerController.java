@@ -22,7 +22,7 @@ public class AnglerController {
     }
     @GetMapping("/{id}")
     public Optional<Angler> getAnglerById(@PathVariable("id") Long id) {
-        return anglerService.findAngler(id);
+        return anglerService.findAnglerById(id);
     }
     @PostMapping
     public Angler saveAngler(@RequestBody Angler angler) {
@@ -30,7 +30,7 @@ public class AnglerController {
     }
     @PutMapping(path = "/{id}")
     public void updateAngler(@PathVariable Long id, @RequestBody Angler angler) {
-        Optional<Angler> current = anglerService.findAngler(id);
+        Optional<Angler> current = anglerService.findAnglerById(id);
         if (null != current) {
             angler.setId(id);
             anglerService.saveAngler(angler);

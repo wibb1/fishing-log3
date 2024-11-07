@@ -18,7 +18,7 @@ public class RecordService {
         return recordRepository.findAll();
     }
 
-    public Optional<Record> findRecord(Long id) {
+    public Optional<Record> findRecordById(Long id) {
         return recordRepository.findById(id);
     }
 

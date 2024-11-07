@@ -22,7 +22,7 @@ public class RecordController {
     }
     @GetMapping("/{id}")
     public Optional<Record> getRecordById(@PathVariable("id") Long id) {
-        return recordService.findRecord(id);
+        return recordService.findRecordById(id);
     }
     @PostMapping("/uploadRecords")
     public List<Record> createRecords(@RequestBody List<Record> records) {
@@ -34,8 +34,8 @@ public class RecordController {
     }
     @PutMapping(path="/{id}")
     public void updateRecord(@PathVariable Long id, @RequestBody Record record) {
-        Optional<Record> current = recordService.findRecord(id);
-        if (null != current) {
+        Optional<Record> current = recordService.findRecordById(id);
+        if (current.isPresent()) {
             record.setId(id);
             recordService.saveRecord(record);
         }

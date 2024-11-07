@@ -18,7 +18,7 @@ public class AnglerService {
         return anglerRepository.findAll();
     }
 
-    public Optional<Angler> findAngler(Long id) {
+    public Optional<Angler> findAnglerById(Long id) {
         return anglerRepository.findById(id);
     }
 
