@@ -24,6 +24,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = FishingLogApplication.class)
 @AutoConfigureMockMvc
@@ -109,9 +110,9 @@ public class AnglerServiceTest extends BaseIntegrationTest {
     @Test
     public void testFindAngler() {
         Angler savedAngler = service.saveAngler(angler);
-        Optional<Angler> foundAngler = service.findAngler(savedAngler.getId());
+        Optional<Angler> foundAngler = service.findAnglerById(savedAngler.getId());
 
-        assertThat(foundAngler).isNotNull();
+        assertTrue(foundAngler.isPresent());
         assertThat(foundAngler.get().getId()).isEqualTo(savedAngler.getId());
     }
 
