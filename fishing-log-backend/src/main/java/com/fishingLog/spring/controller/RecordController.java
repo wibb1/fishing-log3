@@ -30,7 +30,7 @@ public class RecordController {
     }
     @PostMapping("/saveRecord")
     public Record createRecord(@RequestBody Record record) {
-        return recordService.saveRecord(record);
+        return recordService.createRecordWithRelatedEntities(record);
     }
     @PutMapping(path="/{id}")
     public void updateRecord(@PathVariable Long id, @RequestBody Record record) {

@@ -2,17 +2,21 @@ package com.fishingLog.spring.service;
 
 import com.fishingLog.spring.model.Astrological;
 import com.fishingLog.spring.repository.AstrologicalRepository;
+import com.fishingLog.spring.utils.StormGlassAstrologicalConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class AstrologicalService {
-        @Autowired
-        public AstrologicalRepository astrologicalRepository;
+    @Autowired
+    public AstrologicalRepository astrologicalRepository;
+    private final StormGlassAstrologicalConverter astrologicalConverter = new StormGlassAstrologicalConverter();
 
     public List<Astrological> findAllAstrological() {
         return astrologicalRepository.findAll();
@@ -27,8 +31,7 @@ public class AstrologicalService {
     }
 
     public Astrological saveAstrological(Astrological astrological) {
-        Optional<Astrological> equalAstrological = findEqualAstrological(astrological);
-        return equalAstrological.orElseGet(() -> astrologicalRepository.save(astrological));
+        return findEqualAstrological(astrological).orElseGet(() -> astrologicalRepository.save(astrological));
     }
 
     public void deleteAstrological(Long id) {
@@ -51,9 +54,20 @@ public class AstrologicalService {
         existingAstrological.setRecord(astrologicalDetails.getRecord());
         existingAstrological.setSunrise(astrologicalDetails.getSunrise());
         existingAstrological.setSunset(astrologicalDetails.getSunset());
-        existingAstrological.setTideStation(astrologicalDetails.getTideStation());
         existingAstrological.setTime(astrologicalDetails.getTime());
 
         return astrologicalRepository.save(existingAstrological);
+    }
+
+    public Astrological createAstrological(String astrologicalRawData) {
+        Map<String, Object> astrologicalData;
+        try {
+            astrologicalData = astrologicalConverter.dataConverter(astrologicalRawData);
+        } catch (IOException e) {
+            throw new RuntimeException("Error converting astrological data", e); // TODO - logger to record error
+        }
+
+        Astrological newAstrological = new Astrological(astrologicalData);
+        return saveAstrological(newAstrological);
     }
 }

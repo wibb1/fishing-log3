@@ -50,9 +50,8 @@ public class AstrologicalServiceTest extends BaseIntegrationTest {
     public void start() throws IOException {
         JsonNode actualObj = responseDataForTest.getData();
         JsonNode dataJson = actualObj.get(2).get("data").get(0);
-        JsonNode metaJson = actualObj.get(1).get("meta").get("station");
 
-        astrological = new Astrological(dataJson, metaJson);
+        astrological = new Astrological(dataJson);
     }
 
     @AfterEach

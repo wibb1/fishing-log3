@@ -39,7 +39,7 @@ public class Record {
     @Column(nullable = false)
     private String success;
     @Column(nullable = false)
-    private Integer angler_id;
+    private Long angler_id;
     @Column(nullable = false)
     private Instant created_at;
     @Column(nullable = false)
@@ -68,4 +68,110 @@ public class Record {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "astrological_id", referencedColumnName = "id")
     private Astrological astrological;
+
+    public static class RecordBuilder {
+        private String name;
+        private String success;
+        private Long angler_id;
+        private Instant created_at;
+        private Instant updated_at;
+        private String body;
+        private Double latitude;
+        private Double longitude;
+        private Instant datetime;
+        private String timezone;
+        private Set<Angler> anglers;
+        private Weather weather;
+        private List<Tide> tides = new ArrayList<>();
+        private Astrological astrological;
+
+        public RecordBuilder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public RecordBuilder setSuccess(String success) {
+            this.success = success;
+            return this;
+        }
+
+        public RecordBuilder setAnglerId(Long angler_id) {
+            this.angler_id = angler_id;
+            return this;
+        }
+
+        public RecordBuilder setCreatedAt(Instant created_at) {
+            this.created_at = created_at;
+            return this;
+        }
+
+        public RecordBuilder setUpdatedAt(Instant updated_at) {
+            this.updated_at = updated_at;
+            return this;
+        }
+
+        public RecordBuilder setBody(String body) {
+            this.body = body;
+            return this;
+        }
+
+        public RecordBuilder setLatitude(Double latitude) {
+            this.latitude = latitude;
+            return this;
+        }
+
+        public RecordBuilder setLongitude(Double longitude) {
+            this.longitude = longitude;
+            return this;
+        }
+
+        public RecordBuilder setDatetime(Instant datetime) {
+            this.datetime = datetime;
+            return this;
+        }
+
+        public RecordBuilder setTimezone(String timezone) {
+            this.timezone = timezone;
+            return this;
+        }
+
+        public RecordBuilder setAnglers(Set<Angler> anglers) {
+            this.anglers = anglers;
+            return this;
+        }
+
+        public RecordBuilder setWeather(Weather weather) {
+            this.weather = weather;
+            return this;
+        }
+
+        public RecordBuilder setTides(List<Tide> tides) {
+            this.tides = tides;
+            return this;
+        }
+
+        public RecordBuilder setAstrological(Astrological astrological) {
+            this.astrological = astrological;
+            return this;
+        }
+
+        public Record build() {
+            Record record = new Record();
+            record.name = this.name;
+            record.success = this.success;
+            record.angler_id = this.angler_id;
+            record.created_at = this.created_at;
+            record.updated_at = this.updated_at;
+            record.body = this.body;
+            record.latitude = this.latitude;
+            record.longitude = this.longitude;
+            record.datetime = this.datetime;
+            record.timezone = this.timezone;
+            record.anglers = this.anglers;
+            record.weather = this.weather;
+            record.tides = this.tides;
+            record.astrological = this.astrological;
+            return record;
+        }
+    }
 }

@@ -9,15 +9,12 @@ import com.fishingLog.spring.utils.Conversions;
 import com.fishingLog.spring.utils.MoonPhase;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
@@ -73,20 +70,16 @@ public class Astrological {
     })
     private MoonPhase currentMoonPhase;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="tide_station_id", referencedColumnName = "id")
-    private TideStation tideStation;
-
     @OneToOne(mappedBy = "astrological")
     private Record record;
 
     private static final ObjectMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
 
-    public Astrological(JsonNode dataJson, JsonNode metaJson) {
-        this(parseJsonToMap(dataJson), new TideStation(metaJson));
+    public Astrological(JsonNode dataJson) {
+        this(parseJsonToMap(dataJson));
     }
 
-    public Astrological(Map<String, Object> map, TideStation tideStation) {
+    public Astrological(Map<String, Object> map) {
         this.astronomicalDawn = Instant.parse((String) map.get("astronomicalDawn"));
         this.astronomicalDusk = Instant.parse((String) map.get("astronomicalDusk"));
         this.civilDawn = Instant.parse((String) map.get("civilDawn"));
@@ -98,7 +91,6 @@ public class Astrological {
         this.time = Instant.parse((String) map.get("time"));
         this.closestMoonPhase = (MoonPhase) map.get("closestMoonPhase");
         this.currentMoonPhase = (MoonPhase) map.get("currentMoonPhase");
-        this.tideStation = tideStation;
     }
 
     private static Map<String, Object> parseJsonToMap(JsonNode json) {
