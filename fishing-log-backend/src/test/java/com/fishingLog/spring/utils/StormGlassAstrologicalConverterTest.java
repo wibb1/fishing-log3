@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ public class StormGlassAstrologicalConverterTest extends BaseIntegrationTest {
                 "vary", List.of("Accept-Encoding")
         );
         ApiResponse apiResponse = new ApiResponse(200, headers, response.getDataString());
-        when(stormGlassApiService.obtainData()).thenReturn(List.of(apiResponse));
+        when(stormGlassApiService.obtainData(Instant.parse("2024-07-12T21:00:00.00z"), 41.6, -70.8)).thenReturn(List.of(apiResponse));
         actualResponse = stormGlassAstrologicalConverter.dataConverter(response.getAstrologicalDataString());
         expectedResponse = response.getAstroMapTest();
 

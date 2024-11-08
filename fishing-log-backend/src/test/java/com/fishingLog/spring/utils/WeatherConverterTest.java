@@ -3,6 +3,7 @@ package com.fishingLog.spring.utils;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -13,8 +14,6 @@ import static org.mockito.Mockito.when;
 public class WeatherConverterTest {
     private final StormGlassWeatherConverter stormGlassWeatherConverter = new StormGlassWeatherConverter();
     private final ResponseDataForTest response = new ResponseDataForTest();
-    private Map<String,Object> actualResponse;
-    private Map<String,Object> expectedResponse;
 
     @Test
     public void weatherConverterTest() throws IOException {
@@ -28,10 +27,10 @@ public class WeatherConverterTest {
                 "vary", List.of("Accept-Encoding")
         );
         ApiResponse weatherResponse = new ApiResponse(200, headers, response.getDataString());
-        when(stormGlassApiService.obtainData()).thenReturn((List.of(weatherResponse)));
+        when(stormGlassApiService.obtainData(Instant.parse("2024-07-12T21:00:00.00z"), 41.6, -70.8)).thenReturn((List.of(weatherResponse)));
 
-        actualResponse = stormGlassWeatherConverter.dataConverter(response.getWeatherDataString());
-        expectedResponse = response.getWeatherMapTest();
+        Map<String,Object> actualResponse = stormGlassWeatherConverter.dataConverter(response.getWeatherDataString());
+        Map<String,Object> expectedResponse = response.getWeatherMapTest();
 
         assertEquals(expectedResponse.get("airTemperature"), actualResponse.get("airTemperature"));
         assertEquals(expectedResponse.get("cloudCover"), actualResponse.get("cloudCover"));
