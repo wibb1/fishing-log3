@@ -10,6 +10,7 @@ import com.fishingLog.spring.utils.ApiResponse;
 import com.fishingLog.spring.utils.StormGlassApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -21,14 +22,10 @@ public class RecordService {
     @Autowired
     public RecordRepository recordRepository;
 
-    @Autowired
-    private WeatherService weatherService;
-
-    @Autowired
-    private TideService tideService;
-
-    @Autowired
-    private AstrologicalService astrologicalService;
+    private final WeatherService weatherService = new WeatherService();
+    private final TideService tideService = new TideService();
+    private final AstrologicalService astrologicalService = new AstrologicalService();
+    private final StormGlassApiService apiService = new StormGlassApiService();
 
     public List<Record> findAllRecords() {
         return recordRepository.findAll();
@@ -43,8 +40,7 @@ public class RecordService {
     }
 
     public Record saveRecord(Record record) {
-        Optional<Record> equalRecord = findEqualRecord(record);
-        return equalRecord.orElseGet(() -> recordRepository.save(record));
+        return findEqualRecord(record).orElseGet(() -> recordRepository.save(record));
     }
 
     public List<Record> saveRecord(List<Record> record) {
@@ -56,20 +52,21 @@ public class RecordService {
     }
 
     public Record createRecordWithRelatedEntities(Record record) {
-        // Get data from the StormGlass API
-        StormGlassApiService apiService = new StormGlassApiService(record.getDatetime(), record.getLatitude(), record.getLongitude());
-        List<ApiResponse> responses = apiService.obtainData();
+        List<ApiResponse> responses = apiService.obtainData(record.getDatetime(), record.getLatitude(), record.getLongitude());
 
         // Use the services to format and save the data
         Weather weather = weatherService.createWeather(responses.get(0).getBody());
         Astrological astrological = astrologicalService.createAstrological(responses.get(1).getBody());
         List<Tide> tides = tideService.createTides(responses.get(2).getBody());
 
+        Angler currentAngler = getCurrentAngler()
+                .orElseThrow(() -> new IllegalStateException("No authenticated user found"));
+
         // Save the new record
         Record newRecord = new Record.RecordBuilder()
                 .setName(record.getName())
                 .setSuccess(record.getSuccess())
-                .setAnglerId(getCurrentUser().getId())
+                .setAnglerId(currentAngler.getId())
                 .setCreatedAt(Instant.now())
                 .setUpdatedAt(Instant.now())
                 .setBody(record.getBody())
@@ -85,7 +82,11 @@ public class RecordService {
         return recordRepository.save(newRecord);
     }
 
-    private Angler getCurrentUser() {
-        return new Angler();
+    public Optional<Angler> getCurrentAngler() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof Angler) {
+            return Optional.of((Angler) principal);
+        }
+        return Optional.empty();
     }
 }
