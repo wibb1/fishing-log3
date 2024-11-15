@@ -70,16 +70,15 @@ public class Tide {
         if (!(o instanceof Tide tide)) return false;
 
         if (getHeight() != null ? !getHeight().equals(tide.getHeight()) : tide.getHeight() != null) return false;
-        if (getTime() != null ? !isTimeEqual(tide) : tide.getTime() != null) return false;  // Use a custom method to check time equality
+        if (getTime() != null ? !isTimeEqual(tide) : tide.getTime() != null) return false;
         if (getType() != null ? !getType().equals(tide.getType()) : tide.getType() != null) return false;
         if (getRecord() != null ? !getRecord().equals(tide.getRecord()) : tide.getRecord() != null) return false;
         return getTideStation() != null ? getTideStation().equals(tide.getTideStation()) : tide.getTideStation() == null;
     }
     private boolean isTimeEqual(Tide tide) {
         if (this.time == null || tide.time == null) {
-            return this.time == tide.time; // Both are null or one is null
+            return this.time == tide.time;
         }
-        // Check if the time is within one hour
         return ChronoUnit.MINUTES.between(this.time, tide.time) <= 30;
     }
     @Override
