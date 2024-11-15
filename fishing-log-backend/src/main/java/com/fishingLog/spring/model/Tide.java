@@ -70,7 +70,7 @@ public class Tide {
         if (!(o instanceof Tide tide)) return false;
 
         if (getHeight() != null ? !getHeight().equals(tide.getHeight()) : tide.getHeight() != null) return false;
-        if (getTime() != null ? !isTimeEqual(tide) : tide.getHeight() != null) return false;  // Use a custom method to check time equality
+        if (getTime() != null ? !isTimeEqual(tide) : tide.getTime() != null) return false;  // Use a custom method to check time equality
         if (getType() != null ? !getType().equals(tide.getType()) : tide.getType() != null) return false;
         if (getRecord() != null ? !getRecord().equals(tide.getRecord()) : tide.getRecord() != null) return false;
         return getTideStation() != null ? getTideStation().equals(tide.getTideStation()) : tide.getTideStation() == null;
