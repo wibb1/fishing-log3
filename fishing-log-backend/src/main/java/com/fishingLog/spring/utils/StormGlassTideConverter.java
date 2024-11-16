@@ -6,11 +6,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fishingLog.spring.model.Tide;
 import com.fishingLog.spring.model.TideStation;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class StormGlassTideConverter implements StormGlassDataConverter{
     Map<String, String> tideDataMap = new HashMap<>() {
         {

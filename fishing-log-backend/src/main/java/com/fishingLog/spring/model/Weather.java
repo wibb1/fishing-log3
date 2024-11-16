@@ -88,30 +88,30 @@ public class Weather {
     }
 
     public Weather(JsonNode node) {
-        this.airTemperature = node.get("airTemperature").asDouble();
-        this.cloudCover = node.get("cloudCover").asDouble();
-        this.currentDirection = node.get("currentDirection").asDouble();
-        this.currentSpeed = node.get("currentSpeed").asDouble();
-        this.gust = node.get("gust").asDouble();
-        this.humidity = node.get("humidity").asDouble();
-        this.pressure = node.get("pressure").asDouble();
-        this.seaLevel = node.get("seaLevel").asDouble();
-        this.secondarySwellDirection = node.get("secondarySwellDirection").asDouble();
-        this.secondarySwellHeight = node.get("secondarySwellHeight").asDouble();
-        this.secondarySwellPeriod = node.get("secondarySwellPeriod").asDouble();
-        this.swellDirection = node.get("swellDirection").asDouble();
-        this.swellHeight = node.get("swellHeight").asDouble();
-        this.swellPeriod = node.get("swellPeriod").asDouble();
+        this.airTemperature = node.get("airTemperature").get("sg").asDouble();
+        this.cloudCover = node.get("cloudCover").get("sg").asDouble();
+        this.currentDirection = node.get("currentDirection").get("sg").asDouble();
+        this.currentSpeed = node.get("currentSpeed").get("sg").asDouble();
+        this.gust = node.get("gust").get("sg").asDouble();
+        this.humidity = node.get("humidity").get("sg").asDouble();
+        this.pressure = node.get("pressure").get("sg").asDouble();
+        this.seaLevel = node.get("seaLevel").get("sg").asDouble();
+        this.secondarySwellDirection = node.get("secondarySwellDirection").get("sg").asDouble();
+        this.secondarySwellHeight = node.get("secondarySwellHeight").get("sg").asDouble();
+        this.secondarySwellPeriod = node.get("secondarySwellPeriod").get("sg").asDouble();
+        this.swellDirection = node.get("swellDirection").get("sg").asDouble();
+        this.swellHeight = node.get("swellHeight").get("sg").asDouble();
+        this.swellPeriod = node.get("swellPeriod").get("sg").asDouble();
         this.time = Instant.parse(node.get("time").asText());
-        this.visibility = node.get("visibility").asDouble();
-        this.waveDirection = node.get("waveDirection").asDouble();
-        this.waveHeight = node.get("waveHeight").asDouble();
-        this.wavePeriod = node.get("wavePeriod").asDouble();
-        this.windDirection = node.get("windDirection").asDouble();
-        this.windSpeed = node.get("windSpeed").asDouble();
-        this.windWaveDirection = node.get("windWaveDirection").asDouble();
-        this.windWaveHeight = node.get("windWaveHeight").asDouble();
-        this.windWavePeriod = node.get("windWavePeriod").asDouble();
+        this.visibility = node.get("visibility").get("sg").asDouble();
+        this.waveDirection = node.get("waveDirection").get("sg").asDouble();
+        this.waveHeight = node.get("waveHeight").get("sg").asDouble();
+        this.wavePeriod = node.get("wavePeriod").get("sg").asDouble();
+        this.windDirection = node.get("windDirection").get("sg").asDouble();
+        this.windSpeed = node.get("windSpeed").get("sg").asDouble();
+        this.windWaveDirection = node.get("windWaveDirection").get("sg").asDouble();
+        this.windWaveHeight = node.get("windWaveHeight").get("sg").asDouble();
+        this.windWavePeriod = node.get("windWavePeriod").get("sg").asDouble();
     }
 
     public Weather(Map<String, Object> node) {

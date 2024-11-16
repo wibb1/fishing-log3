@@ -87,8 +87,6 @@ public class TideServiceTest extends BaseIntegrationTest {
 
         assertThat(updatedTide).isNotNull();
         assertThat(updatedTide.getHeight()).isEqualTo(1.2);
-
-
     }
 
     @DisplayName("JUnit test for deleteTide method")

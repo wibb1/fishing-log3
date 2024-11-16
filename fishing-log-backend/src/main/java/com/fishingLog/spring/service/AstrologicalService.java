@@ -3,7 +3,6 @@ package com.fishingLog.spring.service;
 import com.fishingLog.spring.model.Astrological;
 import com.fishingLog.spring.repository.AstrologicalRepository;
 import com.fishingLog.spring.utils.StormGlassAstrologicalConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +13,13 @@ import java.util.Optional;
 
 @Service
 public class AstrologicalService {
-    @Autowired
-    public AstrologicalRepository astrologicalRepository;
-    private final StormGlassAstrologicalConverter astrologicalConverter = new StormGlassAstrologicalConverter();
+    private final AstrologicalRepository astrologicalRepository;
+    private final StormGlassAstrologicalConverter astrologicalConverter;
+
+    public AstrologicalService(AstrologicalRepository astrologicalRepository, StormGlassAstrologicalConverter astrologicalConverter) {
+        this.astrologicalRepository = astrologicalRepository;
+        this.astrologicalConverter = astrologicalConverter;
+    }
 
     public List<Astrological> findAllAstrological() {
         return astrologicalRepository.findAll();

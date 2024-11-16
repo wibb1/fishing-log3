@@ -2,7 +2,6 @@ package com.fishingLog.spring.service;
 
 import com.fishingLog.spring.model.TideStation;
 import com.fishingLog.spring.repository.TideStationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
@@ -11,8 +10,12 @@ import java.util.Optional;
 
 @Service
 public class TideStationService {
-    @Autowired
-    public TideStationRepository tideStationRepository;
+
+    private final TideStationRepository tideStationRepository;
+
+    public TideStationService(TideStationRepository tideStationRepository) {
+        this.tideStationRepository = tideStationRepository;
+    }
 
     public List<TideStation> findAllTideStation() {
         return tideStationRepository.findAll();

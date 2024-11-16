@@ -4,7 +4,8 @@ import com.fishingLog.spring.model.Tide;
 import com.fishingLog.spring.model.TideStation;
 import com.fishingLog.spring.repository.TideRepository;
 import com.fishingLog.spring.utils.StormGlassTideConverter;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +17,18 @@ import java.util.Optional;
 
 @Service
 public class TideService {
-    @Autowired
-    public TideRepository tideRepository;
+    private static final Logger logger = LoggerFactory.getLogger(TideService.class);
 
-    @Autowired
-    public TideStationService tideStationService;
+    private final TideStationService tideStationService;
 
-    private final StormGlassTideConverter tideConverter = new StormGlassTideConverter();
+    private final TideRepository tideRepository;
+    private final StormGlassTideConverter tideConverter;
+
+    public TideService(TideRepository tideRepository, StormGlassTideConverter tideConverter, TideStationService tideStationService) {
+        this.tideRepository = tideRepository;
+        this.tideConverter = tideConverter;
+        this.tideStationService = tideStationService;
+    }
 
     public List<Tide> findAllTide() {
         return tideRepository.findAll();
@@ -49,7 +55,8 @@ public class TideService {
         try {
             tideData = tideConverter.dataConverter(tideRawData);
         } catch (IOException e) {
-            throw new RuntimeException("Error converting tide data", e);// TODO - logger to record error
+            logger.error("Error converting tide data: {}", e.getMessage(), e);
+            throw new RuntimeException("Error converting tide data", e);
         }
 
         List<String> tideNames = List.of("firstTide", "secondTide", "thirdTide", "fourthTide");
@@ -57,6 +64,7 @@ public class TideService {
         if (tideData.containsKey("station")) {
             tideStation = (TideStation) tideData.get("station");
             tideStation = tideStationService.saveTideStation(tideStation);
+            logger.info("Tide station saved: {}", tideStation);
         }
         List<Tide> tides = new ArrayList<>();
         for (String tideName : tideNames) {
@@ -65,6 +73,9 @@ public class TideService {
                 if (tideStation != null) tide.setTideStation(tideStation);
                 tide = saveTide(tide);
                 tides.add(tide);
+                logger.info("Tide created: {}", tide);
+            } else {
+                logger.info("Missing tide data for: {}", tideName);
             }
         }
         return tides;

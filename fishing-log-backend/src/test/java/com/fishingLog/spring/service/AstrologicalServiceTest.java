@@ -145,4 +145,17 @@ public class AstrologicalServiceTest extends BaseIntegrationTest {
         assertThat(astrologicalList.size()).isEqualTo(2);
     }
 
+    @DisplayName("JUnit test for createAstrological method")
+    @Test
+    public void testCreateAstrological() {
+        ResponseDataForTest dataForTest = new ResponseDataForTest();
+        String astrologicalData;
+        try {
+            astrologicalData = dataForTest.getAstrologicalDataString();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Astrological createAstrological = service.createAstrological(astrologicalData);
+        assertEquals(createAstrological, astrological);
+    }
 }

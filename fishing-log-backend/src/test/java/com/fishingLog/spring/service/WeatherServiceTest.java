@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -134,5 +135,19 @@ public class WeatherServiceTest extends BaseIntegrationTest {
         List<Weather> astrologicalList = service.findAllWeather();
 
         assertThat(astrologicalList.size()).isEqualTo(2);
+    }
+
+    @DisplayName("JUnit test for createWeather method")
+    @Test
+    public void testCreateWeather() {
+        ResponseDataForTest dataForTest = new ResponseDataForTest();
+        String weatherData;
+        try {
+            weatherData = dataForTest.getWeatherDataString();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Weather createWeather = service.createWeather(weatherData);
+        assertThat(createWeather).isEqualTo(weather);
     }
 }

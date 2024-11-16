@@ -3,7 +3,8 @@ package com.fishingLog.spring.service;
 import com.fishingLog.spring.model.Weather;
 import com.fishingLog.spring.repository.WeatherRepository;
 import com.fishingLog.spring.utils.StormGlassWeatherConverter;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +14,15 @@ import java.util.Map;
 import java.util.Optional;
 @Service
 public class WeatherService {
-    @Autowired
-    public WeatherRepository weatherRepository;
-    private final StormGlassWeatherConverter weatherConverter = new StormGlassWeatherConverter();
+    private static final Logger logger = LoggerFactory.getLogger(WeatherService.class);
+
+    private final WeatherRepository weatherRepository;
+    private final StormGlassWeatherConverter weatherConverter;
+
+    public WeatherService(WeatherRepository weatherRepository, StormGlassWeatherConverter weatherConverter) {
+        this.weatherConverter = weatherConverter;
+        this.weatherRepository = weatherRepository;
+    }
 
     public List<Weather> findAllWeather() {
         return weatherRepository.findAll();
@@ -43,7 +50,8 @@ public class WeatherService {
         try {
             weatherData = weatherConverter.dataConverter(weatherRawData);
         } catch (IOException e) {
-            throw new RuntimeException("Error converting weather data", e);// TODO - logger to record error
+            logger.error("Error converting weather data, Error {}", e);
+            throw new RuntimeException("Error converting weather data", e);
         }
 
         Weather newWeather = new Weather(weatherData);

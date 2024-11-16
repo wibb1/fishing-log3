@@ -6,7 +6,13 @@ public class Conversions {
 /** Try and find conversion tool rather than recreating this */
 
 public static Instant setTimeWithDateString(String time) {
-    return Instant.parse(time);
+    Instant newTime;
+    try {
+        newTime = Instant.parse(time);
+    } catch (Exception e) {
+        throw new IllegalArgumentException("Invalid time format", e);
+    }
+    return newTime;
 }
 
 //    def format_data(data)

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+@Component
 public class StormGlassWeatherConverter implements StormGlassDataConverter {
     Map<String, String> weatherDataMap = new HashMap<>() {
         {
@@ -48,10 +50,9 @@ public class StormGlassWeatherConverter implements StormGlassDataConverter {
         JsonParser parser = factory.createParser(data);
         JsonNode actualObj = mapper.readTree(parser);
         JsonNode firstWeatherData = actualObj.get("hours").get(0);
-        JsonNode metaData = actualObj.get("meta").get("params");
         Set<String> keys = weatherDataMap.keySet();
         for (String each : keys) {
-            if (weatherDataMap.get(each) != null) {
+            if (firstWeatherData.get(each) != null) {
                 String classType = weatherDataMap.get(each);
                 switch (classType) {
                     case "Instant" ->

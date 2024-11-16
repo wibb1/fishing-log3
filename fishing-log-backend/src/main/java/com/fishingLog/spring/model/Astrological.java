@@ -1,6 +1,5 @@
 package com.fishingLog.spring.model;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -76,25 +75,32 @@ public class Astrological {
     private static final ObjectMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
 
     public Astrological(JsonNode dataJson) {
-        this(parseJsonToMap(dataJson));
+        this.astronomicalDawn = Instant.parse(dataJson.get("astronomicalDawn").asText());
+        this.astronomicalDusk = Instant.parse(dataJson.get("astronomicalDusk").asText());
+        this.civilDawn = Instant.parse(dataJson.get("civilDawn").asText());
+        this.civilDusk = Instant.parse(dataJson.get("civilDusk").asText());
+        this.moonrise = Instant.parse(dataJson.get("moonrise").asText());
+        this.moonset = Instant.parse(dataJson.get("moonset").asText());
+        this.sunrise = Instant.parse(dataJson.get("sunrise").asText());
+        this.sunset = Instant.parse(dataJson.get("sunset").asText());
+        this.time = Instant.parse(dataJson.get("time").asText());
+        ObjectMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
+        this.closestMoonPhase = mapper.convertValue(dataJson.get("moonPhase").get("closest"), MoonPhase.class);
+        this.currentMoonPhase = mapper.convertValue(dataJson.get("moonPhase").get("current"), MoonPhase.class);
     }
 
     public Astrological(Map<String, Object> map) {
-        this.astronomicalDawn = Instant.parse((String) map.get("astronomicalDawn"));
-        this.astronomicalDusk = Instant.parse((String) map.get("astronomicalDusk"));
-        this.civilDawn = Instant.parse((String) map.get("civilDawn"));
-        this.civilDusk = Instant.parse((String) map.get("civilDusk"));
-        this.moonrise = Instant.parse((String) map.get("moonrise"));
-        this.moonset = Instant.parse((String) map.get("moonset"));
-        this.sunrise = Instant.parse((String) map.get("sunrise"));
-        this.sunset = Instant.parse((String) map.get("sunset"));
-        this.time = Instant.parse((String) map.get("time"));
-        this.closestMoonPhase = (MoonPhase) map.get("closestMoonPhase");
-        this.currentMoonPhase = (MoonPhase) map.get("currentMoonPhase");
-    }
-
-    private static Map<String, Object> parseJsonToMap(JsonNode json) {
-        return mapper.convertValue(json, new TypeReference<>() {});
+        this.astronomicalDawn = (Instant) map.get("astronomicalDawn");
+        this.astronomicalDusk = (Instant) map.get("astronomicalDusk");
+        this.civilDawn = (Instant) map.get("civilDawn");
+        this.civilDusk = (Instant) map.get("civilDusk");
+        this.moonrise = (Instant) map.get("moonrise");
+        this.moonset = (Instant) map.get("moonset");
+        this.sunrise = (Instant) map.get("sunrise");
+        this.sunset = (Instant) map.get("sunset");
+        this.time = (Instant) map.get("time");
+        this.closestMoonPhase = (MoonPhase) map.get("closest");
+        this.currentMoonPhase = (MoonPhase) map.get("current");
     }
 
     public void setTimeWithString(String field, String time) {

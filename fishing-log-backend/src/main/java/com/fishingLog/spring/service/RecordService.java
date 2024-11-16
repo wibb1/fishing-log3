@@ -22,10 +22,17 @@ public class RecordService {
     @Autowired
     public RecordRepository recordRepository;
 
-    private final WeatherService weatherService = new WeatherService();
-    private final TideService tideService = new TideService();
-    private final AstrologicalService astrologicalService = new AstrologicalService();
-    private final StormGlassApiService apiService = new StormGlassApiService();
+    private final WeatherService weatherService;
+    private final TideService tideService;
+    private final AstrologicalService astrologicalService;
+    private final StormGlassApiService apiService;
+
+    public RecordService(WeatherService weatherService, TideService tideService, AstrologicalService astrologicalService, StormGlassApiService apiService) {
+        this.weatherService = weatherService;
+        this.tideService = tideService;
+        this.astrologicalService = astrologicalService;
+        this.apiService = apiService;
+    }
 
     public List<Record> findAllRecords() {
         return recordRepository.findAll();
@@ -54,7 +61,6 @@ public class RecordService {
     public Record createRecordWithRelatedEntities(Record record) {
         List<ApiResponse> responses = apiService.obtainData(record.getDatetime(), record.getLatitude(), record.getLongitude());
 
-        // Use the services to format and save the data
         Weather weather = weatherService.createWeather(responses.get(0).getBody());
         Astrological astrological = astrologicalService.createAstrological(responses.get(1).getBody());
         List<Tide> tides = tideService.createTides(responses.get(2).getBody());
@@ -62,7 +68,6 @@ public class RecordService {
         Angler currentAngler = getCurrentAngler()
                 .orElseThrow(() -> new IllegalStateException("No authenticated user found"));
 
-        // Save the new record
         Record newRecord = new Record.RecordBuilder()
                 .setName(record.getName())
                 .setSuccess(record.getSuccess())
