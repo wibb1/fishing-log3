@@ -16,7 +16,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import java.time.Duration;
 
 @SpringJUnitConfig
-public abstract class BaseIntegrationTest {
+public abstract class BaseIntegrationIntegrationTest {
     static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:16.0")
             .withDatabaseName("testdb")
             .withUsername("test")
@@ -27,7 +27,7 @@ public abstract class BaseIntegrationTest {
             })
             .waitingFor(Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(30)))
             .withReuse(true)
-            .withLogConsumer(new Slf4jLogConsumer(LoggerFactory.getLogger(BaseIntegrationTest.class)));
+            .withLogConsumer(new Slf4jLogConsumer(LoggerFactory.getLogger(BaseIntegrationIntegrationTest.class)));
 
     @BeforeAll
     static void setup() {

@@ -11,7 +11,7 @@ import java.sql.Statement;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-public class PostgresContainerTest extends BaseIntegrationTest {
+public class PostgresContainerIntegrationTest extends BaseIntegrationIntegrationTest {
 
     @Test
     void testDatabaseConnection() throws Exception {
@@ -35,27 +35,13 @@ public class PostgresContainerTest extends BaseIntegrationTest {
                 String tableName = rs.getString(1);
                 System.out.println("Found table: " + tableName);
                 switch (tableName) {
-                    case "angler":
-                        anglerExists = true;
-                        break;
-                    case "astrological":
-                        astrologicalExists = true;
-                        break;
-                    case "record":
-                        recordExists = true;
-                        break;
-                    case "species":
-                        speciesExists = true;
-                        break;
-                    case "tide":
-                        tideExists = true;
-                        break;
-                    case "tide_station":
-                        tideStationExists = true;
-                        break;
-                    case "weather":
-                        weatherExists = true;
-                        break;
+                    case "angler" -> anglerExists = true;
+                    case "astrological" -> astrologicalExists = true;
+                    case "record" -> recordExists = true;
+                    case "species" -> speciesExists = true;
+                    case "tide" -> tideExists = true;
+                    case "tide_station" -> tideStationExists = true;
+                    case "weather" -> weatherExists = true;
                 }
             }
 

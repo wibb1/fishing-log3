@@ -19,10 +19,10 @@ import java.util.Optional;
 public class TideService {
     private static final Logger logger = LoggerFactory.getLogger(TideService.class);
 
-    private final TideStationService tideStationService;
+    private TideStationService tideStationService;
 
-    private final TideRepository tideRepository;
-    private final StormGlassTideConverter tideConverter;
+    private TideRepository tideRepository;
+    private StormGlassTideConverter tideConverter;
 
     public TideService(TideRepository tideRepository, StormGlassTideConverter tideConverter, TideStationService tideStationService) {
         this.tideRepository = tideRepository;
@@ -79,5 +79,17 @@ public class TideService {
             }
         }
         return tides;
+    }
+
+    public void setTideStationService(TideStationService tideStationService) {
+        this.tideStationService = tideStationService;
+    }
+
+    public void setTideRepository(TideRepository tideRepository) {
+        this.tideRepository = tideRepository;
+    }
+
+    public void setTideConverter(StormGlassTideConverter tideConverter) {
+        this.tideConverter = tideConverter;
     }
 }

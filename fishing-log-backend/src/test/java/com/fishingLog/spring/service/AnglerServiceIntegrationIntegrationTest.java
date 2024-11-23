@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @AutoConfigureMockMvc
 @Testcontainers
 @ActiveProfiles("test")
-public class AnglerServiceTest extends BaseIntegrationTest {
+public class AnglerServiceIntegrationIntegrationTest extends BaseIntegrationIntegrationTest {
 
     @Autowired
     private AnglerRepository repository;

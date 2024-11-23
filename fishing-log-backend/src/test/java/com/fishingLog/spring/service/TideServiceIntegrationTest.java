@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @AutoConfigureMockMvc
 @Testcontainers
 @ActiveProfiles("test")
-public class TideServiceTest extends BaseIntegrationTest {
+public class TideServiceIntegrationTest extends BaseIntegrationIntegrationTest {
     @Autowired
     public TideRepository repository;
 

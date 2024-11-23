@@ -16,8 +16,9 @@ import java.util.Optional;
 public class WeatherService {
     private static final Logger logger = LoggerFactory.getLogger(WeatherService.class);
 
-    private final WeatherRepository weatherRepository;
-    private final StormGlassWeatherConverter weatherConverter;
+    private WeatherRepository weatherRepository;
+
+    private StormGlassWeatherConverter weatherConverter;
 
     public WeatherService(WeatherRepository weatherRepository, StormGlassWeatherConverter weatherConverter) {
         this.weatherConverter = weatherConverter;
@@ -34,6 +35,10 @@ public class WeatherService {
 
 
     public Optional<Weather> findEqualWeather(Weather weather) {
+        if (weather == null) {
+            logger.warn("Weather object is null");
+            return Optional.empty();
+        }
         return weatherRepository.findOne(Example.of(weather));
     }
 
@@ -56,5 +61,13 @@ public class WeatherService {
 
         Weather newWeather = new Weather(weatherData);
         return saveWeather(newWeather);
+    }
+
+    public void setWeatherRepository(WeatherRepository weatherRepository) {
+        this.weatherRepository = weatherRepository;
+    }
+
+    public void setWeatherConverter(StormGlassWeatherConverter weatherConverter) {
+        this.weatherConverter = weatherConverter;
     }
 }

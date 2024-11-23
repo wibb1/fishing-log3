@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @AutoConfigureMockMvc
 @Testcontainers
 @ActiveProfiles("test")
-public class SpeciesServiceTest extends BaseIntegrationTest {
+public class SpeciesServiceIntegrationTest extends BaseIntegrationIntegrationTest {
     @Autowired
     public SpeciesRepository repository;
 

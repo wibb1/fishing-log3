@@ -3,7 +3,7 @@ package com.fishingLog.spring.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fishingLog.spring.service.BaseIntegrationTest;
+import com.fishingLog.spring.service.BaseIntegrationIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -14,7 +14,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-public class StormGlassApiServiceTest extends BaseIntegrationTest {
+public class StormGlassApiServiceTest extends BaseIntegrationIntegrationTest {
     private static final String expectedResponse = """
             [{"hours":[{"airTemperature":{"sg":23.38},"cloudCover":{"sg":43.7},"currentDirection":{"sg":321.8},
             "currentSpeed":{"sg":0.06},"gust":{"sg":13.53},"humidity":{"sg":90.9},"pressure":{"sg":1022.44},

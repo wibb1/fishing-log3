@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public class TideStationService {
 
-    private final TideStationRepository tideStationRepository;
+    private TideStationRepository tideStationRepository;
 
     public TideStationService(TideStationRepository tideStationRepository) {
         this.tideStationRepository = tideStationRepository;
@@ -40,5 +40,9 @@ public class TideStationService {
 
     public void deleteTideStation(Long id) {
         tideStationRepository.deleteById(id);
+    }
+
+    public void setTideStationRepository(TideStationRepository tideStationRepository) {
+        this.tideStationRepository = tideStationRepository;
     }
 }

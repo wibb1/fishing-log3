@@ -13,8 +13,8 @@ import java.util.Optional;
 
 @Service
 public class AstrologicalService {
-    private final AstrologicalRepository astrologicalRepository;
-    private final StormGlassAstrologicalConverter astrologicalConverter;
+    private AstrologicalRepository astrologicalRepository;
+    private StormGlassAstrologicalConverter astrologicalConverter;
 
     public AstrologicalService(AstrologicalRepository astrologicalRepository, StormGlassAstrologicalConverter astrologicalConverter) {
         this.astrologicalRepository = astrologicalRepository;
@@ -72,5 +72,13 @@ public class AstrologicalService {
 
         Astrological newAstrological = new Astrological(astrologicalData);
         return saveAstrological(newAstrological);
+    }
+
+    public void setAstrologicalRepository(AstrologicalRepository astrologicalRepository) {
+        this.astrologicalRepository = astrologicalRepository;
+    }
+
+    public void setAstrologicalConverter(StormGlassAstrologicalConverter astrologicalConverter) {
+        this.astrologicalConverter = astrologicalConverter;
     }
 }

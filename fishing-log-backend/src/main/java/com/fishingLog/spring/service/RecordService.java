@@ -19,13 +19,13 @@ import java.util.Optional;
 
 @Service
 public class RecordService {
+    private StormGlassApiService apiService;
     @Autowired
     public RecordRepository recordRepository;
 
-    private final WeatherService weatherService;
-    private final TideService tideService;
-    private final AstrologicalService astrologicalService;
-    private final StormGlassApiService apiService;
+    private WeatherService weatherService;
+    private TideService tideService;
+    private AstrologicalService astrologicalService;
 
     public RecordService(WeatherService weatherService, TideService tideService, AstrologicalService astrologicalService, StormGlassApiService apiService) {
         this.weatherService = weatherService;
@@ -60,10 +60,32 @@ public class RecordService {
 
     public Record createRecordWithRelatedEntities(Record record) {
         List<ApiResponse> responses = apiService.obtainData(record.getDatetime(), record.getLatitude(), record.getLongitude());
+        System.out.println("apiService = " + apiService);
+        if (responses == null || responses.size() != 3) {
+            throw new IllegalArgumentException("Incorrect number of responses from Stormglass");
+        }
+
+        ApiResponse weatherResponse = responses.get(0);
+        ApiResponse astrologicalResponse = responses.get(1);
+        ApiResponse tideResponse = responses.get(2);
+
+        if (weatherResponse == null || weatherResponse.getBody().isEmpty()) {
+            throw new IllegalArgumentException("Weather data is empty");
+        }
+        if (astrologicalResponse == null || astrologicalResponse.getBody().isEmpty()) {
+            throw new IllegalArgumentException("Astrological data is empty");
+        }
+        if (tideResponse == null || tideResponse.getBody().isEmpty()) {
+            throw new IllegalArgumentException("Tide data is empty");
+        }
 
         Weather weather = weatherService.createWeather(responses.get(0).getBody());
         Astrological astrological = astrologicalService.createAstrological(responses.get(1).getBody());
         List<Tide> tides = tideService.createTides(responses.get(2).getBody());
+
+        if (tides == null || tides.isEmpty()) {
+            throw new IllegalArgumentException("Tide data is empty or null");
+        }
 
         Angler currentAngler = getCurrentAngler()
                 .orElseThrow(() -> new IllegalStateException("No authenticated user found"));
@@ -93,5 +115,25 @@ public class RecordService {
             return Optional.of((Angler) principal);
         }
         return Optional.empty();
+    }
+
+    public void setApiService(StormGlassApiService apiService) {
+        this.apiService = apiService;
+    }
+
+    public void setRecordRepository(RecordRepository recordRepository) {
+        this.recordRepository = recordRepository;
+    }
+
+    public void setWeatherService(WeatherService weatherService) {
+        this.weatherService = weatherService;
+    }
+
+    public void setTideService(TideService tideService) {
+        this.tideService = tideService;
+    }
+
+    public void setAstrologicalService(AstrologicalService astrologicalService) {
+        this.astrologicalService = astrologicalService;
     }
 }

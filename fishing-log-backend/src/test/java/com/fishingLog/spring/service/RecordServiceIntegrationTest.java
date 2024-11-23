@@ -26,7 +26,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class RecordServiceTest extends BaseIntegrationTest {
+public class RecordServiceIntegrationTest extends BaseIntegrationIntegrationTest {
 
     @Autowired
     private RecordService recordService;

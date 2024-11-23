@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @AutoConfigureMockMvc
 @Testcontainers
 @ActiveProfiles("test")
-public class WeatherServiceTest extends BaseIntegrationTest {
+public class WeatherServiceIntegrationTest extends BaseIntegrationIntegrationTest {
     @Autowired
     public WeatherRepository repository;
 
