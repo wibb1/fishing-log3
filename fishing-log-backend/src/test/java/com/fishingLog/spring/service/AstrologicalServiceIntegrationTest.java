@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @AutoConfigureMockMvc
 @Testcontainers
 @ActiveProfiles("test")
-public class AstrologicalServiceIntegrationIntegrationTest extends BaseIntegrationIntegrationTest {
+public class AstrologicalServiceIntegrationTest extends BaseIntegrationIntegrationTest {
     @Autowired
     public AstrologicalRepository repository;
 
