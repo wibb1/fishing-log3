@@ -1,8 +1,11 @@
 package com.fishingLog.spring.service;
 
+import com.fishingLog.spring.exception.DataConversionException;
 import com.fishingLog.spring.model.Astrological;
 import com.fishingLog.spring.repository.AstrologicalRepository;
 import com.fishingLog.spring.utils.StormGlassAstrologicalConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,7 @@ import java.util.Optional;
 
 @Service
 public class AstrologicalService {
+    private static final Logger logger = LoggerFactory.getLogger(AstrologicalService.class);
     private AstrologicalRepository astrologicalRepository;
     private StormGlassAstrologicalConverter astrologicalConverter;
 
@@ -29,11 +33,14 @@ public class AstrologicalService {
         return astrologicalRepository.findById(id);
     }
 
-    public Optional<Astrological> findEqualAstrological(Astrological a) {
-        return astrologicalRepository.findOne(Example.of(a));
+    public Optional<Astrological> findEqualAstrological(Astrological astrological ) {
+        validateAstrological(astrological );
+        return astrologicalRepository.findOne(Example.of(astrological ));
     }
 
     public Astrological saveAstrological(Astrological astrological) {
+        validateAstrological(astrological);
+        logger.info("Saving new astrological {}", astrological);
         return findEqualAstrological(astrological).orElseGet(() -> astrologicalRepository.save(astrological));
     }
 
@@ -42,7 +49,7 @@ public class AstrologicalService {
     }
 
     public Astrological updateAstrological(Astrological astrologicalDetails) {
-
+        validateAstrological(astrologicalDetails);
         Astrological existingAstrological = astrologicalRepository.findById(astrologicalDetails.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Astrological not found with id: " + astrologicalDetails.getId()));
 
@@ -59,6 +66,7 @@ public class AstrologicalService {
         existingAstrological.setSunset(astrologicalDetails.getSunset());
         existingAstrological.setTime(astrologicalDetails.getTime());
 
+        logger.info("Updating astrological record with id: {}", astrologicalDetails.getId());
         return astrologicalRepository.save(existingAstrological);
     }
 
@@ -67,7 +75,8 @@ public class AstrologicalService {
         try {
             astrologicalData = astrologicalConverter.dataConverter(astrologicalRawData);
         } catch (IOException e) {
-            throw new RuntimeException("Error converting astrological data", e); // TODO - logger to record error
+            logger.error("Failed to convert astrological data", e);
+            throw new DataConversionException("Failed to convert astrological data", e);
         }
 
         Astrological newAstrological = new Astrological(astrologicalData);
@@ -80,5 +89,12 @@ public class AstrologicalService {
 
     public void setAstrologicalConverter(StormGlassAstrologicalConverter astrologicalConverter) {
         this.astrologicalConverter = astrologicalConverter;
+    }
+
+    private void validateAstrological(Astrological  astrological) {
+        if (astrological == null) {
+            logger.error("Astrological object cannot be null");
+            throw new IllegalArgumentException("Angler object cannot be null");
+        }
     }
 }
