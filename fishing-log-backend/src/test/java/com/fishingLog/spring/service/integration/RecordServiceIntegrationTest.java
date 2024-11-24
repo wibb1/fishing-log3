@@ -1,4 +1,4 @@
-package com.fishingLog.spring.service;
+package com.fishingLog.spring.service.integration;
 
 import com.fishingLog.spring.model.Angler;
 import com.fishingLog.spring.model.Astrological;
@@ -6,6 +6,10 @@ import com.fishingLog.spring.model.Record;
 import com.fishingLog.spring.model.Tide;
 import com.fishingLog.spring.model.Weather;
 import com.fishingLog.spring.repository.RecordRepository;
+import com.fishingLog.spring.service.AstrologicalService;
+import com.fishingLog.spring.service.RecordService;
+import com.fishingLog.spring.service.TideService;
+import com.fishingLog.spring.service.WeatherService;
 import com.fishingLog.spring.utils.ApiResponse;
 import com.fishingLog.spring.utils.StormGlassApiService;
 import org.junit.jupiter.api.Tag;

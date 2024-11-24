@@ -1,8 +1,9 @@
-package com.fishingLog.spring.service;
+package com.fishingLog.spring.service.integration;
 
 import com.fishingLog.FishingLogApplication;
 import com.fishingLog.spring.model.Angler;
 import com.fishingLog.spring.repository.AnglerRepository;
+import com.fishingLog.spring.service.AnglerService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

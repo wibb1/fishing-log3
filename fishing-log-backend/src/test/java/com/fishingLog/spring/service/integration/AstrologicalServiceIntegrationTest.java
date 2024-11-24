@@ -1,9 +1,10 @@
-package com.fishingLog.spring.service;
+package com.fishingLog.spring.service.integration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fishingLog.FishingLogApplication;
 import com.fishingLog.spring.model.Astrological;
 import com.fishingLog.spring.repository.AstrologicalRepository;
+import com.fishingLog.spring.service.AstrologicalService;
 import com.fishingLog.spring.utils.ResponseDataForTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

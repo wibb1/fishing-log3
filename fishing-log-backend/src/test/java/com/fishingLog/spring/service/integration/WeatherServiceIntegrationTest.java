@@ -1,8 +1,9 @@
-package com.fishingLog.spring.service;
+package com.fishingLog.spring.service.integration;
 
 import com.fishingLog.FishingLogApplication;
 import com.fishingLog.spring.model.Weather;
 import com.fishingLog.spring.repository.WeatherRepository;
+import com.fishingLog.spring.service.WeatherService;
 import com.fishingLog.spring.utils.ResponseDataForTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

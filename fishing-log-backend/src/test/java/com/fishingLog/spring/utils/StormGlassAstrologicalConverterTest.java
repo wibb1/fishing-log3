@@ -1,6 +1,6 @@
 package com.fishingLog.spring.utils;
 
-import com.fishingLog.spring.service.BaseIntegrationIntegrationTest;
+import com.fishingLog.spring.service.integration.BaseIntegrationIntegrationTest;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

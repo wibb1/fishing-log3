@@ -1,4 +1,4 @@
-package com.fishingLog.spring.service;
+package com.fishingLog.spring.service.integration;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
