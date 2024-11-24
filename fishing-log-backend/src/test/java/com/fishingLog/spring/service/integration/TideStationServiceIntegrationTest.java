@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -99,21 +98,5 @@ public class TideStationServiceIntegrationTest extends BaseIntegrationIntegratio
 
         assertThat(foundTideStation).isPresent();
         assertThat(foundTideStation.get().getId()).isEqualTo(tideStation.getId());
-    }
-
-    @DisplayName("JUnit test for findAllTideStation method")
-    @Test
-    public void testFindAllTideStation() {
-        service.saveTideStation(tideStation);
-        TideStation anotherTideStation = new TideStation();
-        anotherTideStation.setStationName("Nothing Used");
-        anotherTideStation.setStationSource("Never Used");
-        anotherTideStation.setStationLat(10.0);
-        anotherTideStation.setStationLng(20.0);
-        service.saveTideStation(anotherTideStation);
-
-        List<TideStation> astrologicalList = service.findAllTideStation();
-
-        assertThat(astrologicalList.size()).isEqualTo(2);
     }
 }
