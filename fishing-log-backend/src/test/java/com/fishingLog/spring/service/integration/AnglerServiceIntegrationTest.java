@@ -46,7 +46,7 @@ public class AnglerServiceIntegrationTest extends BaseIntegrationIntegrationTest
     @BeforeEach
     public void start() {
         angler = new Angler(1L, "Samwise", "Gamgee", "SamwiseGamgee",
-                "SamWizeGamGee@noplace.com", "USER","password", "", Instant.now(), Instant.now());
+                "SamWizeGamGee@noplace.com", "USER","password", Instant.now(), Instant.now());
     }
 
     @AfterEach
@@ -124,7 +124,7 @@ public class AnglerServiceIntegrationTest extends BaseIntegrationIntegrationTest
     public void testFindAllAnglers() {
         service.saveAngler(angler);
         Angler anotherAngler = new Angler(2L, "Frodo", "Baggins", "FrodoBaggins",
-                "FrodoBaggins@noplace.com", "USER", "password", "", Instant.now(), Instant.now());
+                "FrodoBaggins@noplace.com", "USER", "password", Instant.now(), Instant.now());
         service.saveAngler(anotherAngler);
 
         Iterable<Angler> anglers = service.findAllAnglers();

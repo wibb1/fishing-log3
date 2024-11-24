@@ -54,7 +54,7 @@ public class Angler implements UserDetails {
     @ManyToMany
     private Set<Record> records;
 
-    public Angler(Long id, String firstName, String lastName, String username, String email, String role, String password, String salt, Instant createdAt, Instant updatedAt) {
+    public Angler(Long id, String firstName, String lastName, String username, String email, String role, String password, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

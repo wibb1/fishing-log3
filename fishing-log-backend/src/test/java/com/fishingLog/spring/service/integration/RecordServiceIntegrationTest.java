@@ -58,7 +58,7 @@ public class RecordServiceIntegrationTest extends BaseIntegrationIntegrationTest
         SecurityContext securityContext = mock(SecurityContext.class);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(new Angler(1L, "Samwise", "Gamgee", "SamwiseGamgee",
-                "SamWizeGamGee@noplace.com", "USER","password", "", Instant.now(), Instant.now()));
+                "SamWizeGamGee@noplace.com", "USER","password", Instant.now(), Instant.now()));
         SecurityContextHolder.setContext(securityContext);
 
         List<ApiResponse> mockResponses = List.of(
