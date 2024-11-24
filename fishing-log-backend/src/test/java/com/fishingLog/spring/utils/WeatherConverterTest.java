@@ -1,5 +1,6 @@
 package com.fishingLog.spring.utils;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -11,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@Tag("integration")
 public class WeatherConverterTest {
     private final StormGlassWeatherConverter stormGlassWeatherConverter = new StormGlassWeatherConverter();
     private final ResponseDataForTest response = new ResponseDataForTest();

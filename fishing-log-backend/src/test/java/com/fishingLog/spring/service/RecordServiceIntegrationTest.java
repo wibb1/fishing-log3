@@ -8,6 +8,7 @@ import com.fishingLog.spring.model.Weather;
 import com.fishingLog.spring.repository.RecordRepository;
 import com.fishingLog.spring.utils.ApiResponse;
 import com.fishingLog.spring.utils.StormGlassApiService;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +27,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@Tag("integration")
 public class RecordServiceIntegrationTest extends BaseIntegrationIntegrationTest {
 
     @Autowired

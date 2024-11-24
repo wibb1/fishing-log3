@@ -1,5 +1,6 @@
 package com.fishingLog.spring.service;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -11,6 +12,7 @@ import java.sql.Statement;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
+@Tag("integration")
 public class PostgresContainerIntegrationTest extends BaseIntegrationIntegrationTest {
 
     @Test

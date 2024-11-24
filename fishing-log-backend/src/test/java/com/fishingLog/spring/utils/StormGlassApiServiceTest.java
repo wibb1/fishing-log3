@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fishingLog.spring.service.BaseIntegrationIntegrationTest;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -14,6 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
+@Tag("integration")
 public class StormGlassApiServiceTest extends BaseIntegrationIntegrationTest {
     private static final String expectedResponse = """
             [{"hours":[{"airTemperature":{"sg":23.38},"cloudCover":{"sg":43.7},"currentDirection":{"sg":321.8},

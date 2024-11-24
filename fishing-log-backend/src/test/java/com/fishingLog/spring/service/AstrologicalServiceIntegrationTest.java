@@ -8,6 +8,7 @@ import com.fishingLog.spring.utils.ResponseDataForTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -35,6 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @AutoConfigureMockMvc
 @Testcontainers
 @ActiveProfiles("test")
+@Tag("integration")
 public class AstrologicalServiceIntegrationTest extends BaseIntegrationIntegrationTest {
     @Autowired
     public AstrologicalRepository repository;

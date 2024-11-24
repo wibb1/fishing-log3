@@ -1,4 +1,4 @@
-package com.fishingLog.spring.service;
+package com.fishingLog.spring.service.unit;
 
 import com.fishingLog.FishingLogApplication;
 import com.fishingLog.spring.model.Angler;
@@ -11,6 +11,11 @@ import com.fishingLog.spring.repository.RecordRepository;
 import com.fishingLog.spring.repository.TideRepository;
 import com.fishingLog.spring.repository.TideStationRepository;
 import com.fishingLog.spring.repository.WeatherRepository;
+import com.fishingLog.spring.service.AstrologicalService;
+import com.fishingLog.spring.service.RecordService;
+import com.fishingLog.spring.service.TideService;
+import com.fishingLog.spring.service.TideStationService;
+import com.fishingLog.spring.service.WeatherService;
 import com.fishingLog.spring.utils.ApiResponse;
 import com.fishingLog.spring.utils.ResponseDataForTest;
 import com.fishingLog.spring.utils.StormGlassApiService;
@@ -18,6 +23,7 @@ import com.fishingLog.spring.utils.StormGlassAstrologicalConverter;
 import com.fishingLog.spring.utils.StormGlassTideConverter;
 import com.fishingLog.spring.utils.StormGlassWeatherConverter;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -56,6 +62,7 @@ import static org.mockito.Mockito.when;
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("UnitTest")
+@Tag("unit")
 public class RecordServiceUnitTest {
     private RecordRepository recordRepository;
     private StormGlassApiService apiService;

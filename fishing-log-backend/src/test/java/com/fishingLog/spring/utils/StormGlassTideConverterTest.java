@@ -2,6 +2,7 @@ package com.fishingLog.spring.utils;
 
 import com.fishingLog.spring.model.Tide;
 import com.fishingLog.spring.model.TideStation;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@Tag("integration")
 public class StormGlassTideConverterTest {
     private final StormGlassTideConverter stormGlassTideConverter = new StormGlassTideConverter();
     private final ResponseDataForTest response = new ResponseDataForTest();

@@ -3,12 +3,15 @@ package com.fishingLog.spring.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Tag("unit")
+@Tag("integration")
 public class ResponseDataForTestTest {
     private final String expectedStringResponse = "[{\"hours\":[{\"airTemperature\":{\"sg\":23.38},\"cloudCover\":{\"sg\"" +
             ":43.7},\"currentDirection\":{\"sg\":321.8},\"currentSpeed\":{\"sg\":0.06},\"gust\":{\"sg\":13.53},\"humidity\"" +
