@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Map;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -44,6 +46,13 @@ public class TideStation {
         this.stationLng = stationData.get("lng").asDouble();
         this.stationName = stationData.get("name").asText();
         this.stationSource = stationData.get("source").asText();
+    }
+
+    public TideStation(Map<String, Object> node) {
+        this.stationLat = (Double) node.get("lat");
+        this.stationLng = (Double) node.get("lng");
+        this.stationName = (String) node.get("name");
+        this.stationSource = (String) node.get("source");
     }
 
     public TideStation(Double stationLat, Double stationLng, String stationName, String stationSource) {
