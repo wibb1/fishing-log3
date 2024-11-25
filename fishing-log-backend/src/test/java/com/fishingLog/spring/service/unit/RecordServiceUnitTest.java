@@ -86,22 +86,9 @@ public class RecordServiceUnitTest {
 
     @BeforeEach
     public void setUp() {
-        record = new Record.RecordBuilder()
-                .setName("Expected Record Name")
-                .setSuccess("Success")
-                .setAnglerId(1L)
-                .setCreatedAt(Instant.now())
-                .setUpdatedAt(Instant.now())
-                .setBody("Test Body")
-                .setLatitude(41.6)
-                .setLongitude(-70.8)
-                .setDatetime(Instant.parse("2024-07-12T21:00:00+00:00"))
-                .setTimezone("UTC")
-                .build();
-
+        createTestRecord();
         angler = new Angler();
         angler.setId(1L);
-
         mockServices();
     }
 
@@ -124,7 +111,7 @@ public class RecordServiceUnitTest {
     }
 
     @Test
-    public void testFindEqualRecordExists() {
+    public void testFindEqualRecord_Exists() {
         when(recordRepository.findOne(any())).thenReturn(Optional.of(record));
         Optional<Record> result = recordService.findEqualRecord(record);
         assertTrue(result.isPresent());
@@ -132,14 +119,14 @@ public class RecordServiceUnitTest {
     }
 
     @Test
-    public void testFindEqualRecordDoesNotExist() {
+    public void testFindEqualRecord_DoesNotExist() {
         when(recordRepository.findOne(any())).thenReturn(Optional.empty());
         Optional<Record> result = recordService.findEqualRecord(record);
         assertFalse(result.isPresent());
     }
 
     @Test
-    public void testSaveRecordExists() {
+    public void testSaveRecord_Exists() {
         when(recordRepository.findOne(any())).thenReturn(Optional.of(record));
         Record result = recordService.saveRecord(record);
         assertEquals(record, result);
@@ -147,7 +134,7 @@ public class RecordServiceUnitTest {
     }
 
     @Test
-    public void testSaveRecordDoesNotExist() {
+    public void testSaveRecord_DoesNotExist() {
         when(recordRepository.findOne(any())).thenReturn(Optional.empty());
         when(recordRepository.save(record)).thenReturn(record);
         Record result = recordService.saveRecord(record);
@@ -200,14 +187,14 @@ public class RecordServiceUnitTest {
     }
 
     @Test
-    public void testCreateRecordWithRelatedEntitiesNullResponses() {
+    public void testCreateRecordWithRelatedEntities_NullResponses() {
         doReturn(null).when(apiService).obtainData(any(Instant.class), anyDouble(), anyDouble());
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> recordService.createRecordWithRelatedEntities(record));
         assertEquals("Incorrect number of responses from Stormglass", exception.getMessage());
     }
 
     @Test
-    public void testCreateRecordWithRelatedEntitiesFewerResponses() throws IOException {
+    public void testCreateRecordWithRelatedEntities_FewerResponses() throws IOException {
         Map<String, List<String>> headers = Map.of("header", List.of("stuff in the header"));
         ResponseDataForTest testdata = new ResponseDataForTest();
         ApiResponse weatherResponse = new ApiResponse(200, headers, testdata.getWeatherDataString());
@@ -219,7 +206,7 @@ public class RecordServiceUnitTest {
     }
 
     @Test
-    public void testCreateRecordWithRelatedEntitiesEmptyResponseBodies() {
+    public void testCreateRecordWithRelatedEntities_EmptyResponseBodies() {
         Map<String, List<String>> headers = Map.of("header", List.of("stuff in the header"));
         ApiResponse emptyResponse = new ApiResponse(200, headers, "");
         List<ApiResponse> responses = Arrays.asList(emptyResponse, emptyResponse, emptyResponse);
@@ -236,10 +223,25 @@ public class RecordServiceUnitTest {
     }
 
     @Test
-    public void testGetCurrentAnglerNotInstanceOfAngler() {
+    public void testGetCurrentAngler_NotInstanceOfAngler() {
         when(authentication.getPrincipal()).thenReturn("Not an Angler");
         Optional<Angler> result = recordService.getCurrentAngler();
         assertFalse(result.isPresent());
+    }
+
+    private void createTestRecord() {
+        record = new Record.RecordBuilder()
+                .setName("Expected Record Name")
+                .setSuccess("Success")
+                .setAnglerId(1L)
+                .setCreatedAt(Instant.now())
+                .setUpdatedAt(Instant.now())
+                .setBody("Test Body")
+                .setLatitude(41.6)
+                .setLongitude(-70.8)
+                .setDatetime(Instant.parse("2024-07-12T21:00:00+00:00"))
+                .setTimezone("UTC")
+                .build();
     }
 
     private void mockServices() {
