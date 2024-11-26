@@ -42,6 +42,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	// Springboot security
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	// .env
+	implementation 'io.github.cdimascio:dotenv-java:3.0.0'
 	// Test dependencies
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.junit.jupiter:junit-jupiter'

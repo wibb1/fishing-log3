@@ -1,6 +1,6 @@
 package com.fishingLog.spring.utils;
 
-import com.fishingLog.ENVVariables;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -26,11 +26,13 @@ public class StormGlassApiService {
 
     public List<ApiResponse> obtainData(Instant parsedTime, Double latitude, Double longitude) {
         List<ApiResponse> responses = new ArrayList<>();
+        Dotenv dotenv = Dotenv.load();
+        String STORMGLASS_API_KEY = dotenv.get("STORMGLASS_API_KEY");
         for (String request : requestTypes) {
             try {
                 HttpRequest httpRequest = HttpRequest.newBuilder()
                         .uri(URI.create(createUrl(request, parsedTime, latitude, longitude)))
-                        .header("Authorization", ENVVariables.getStormGlassApiKey())
+                        .header("Authorization", STORMGLASS_API_KEY)
                         .method("GET", HttpRequest.BodyPublishers.noBody())
                         .build();
                 HttpResponse<String> response = HttpClient.newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString());
