@@ -1,22 +1,26 @@
 package com.fishingLog.spring.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fishingLog.spring.service.integration.BaseIntegrationIntegrationTest;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@Tag("integration")
-public class StormGlassApiServiceTest extends BaseIntegrationIntegrationTest {
+@Tag("unit")
+public class StormGlassApiServiceTest {
     private static final String expectedResponse = """
             [{"hours":[{"airTemperature":{"sg":23.38},"cloudCover":{"sg":43.7},"currentDirection":{"sg":321.8},
             "currentSpeed":{"sg":0.06},"gust":{"sg":13.53},"humidity":{"sg":90.9},"pressure":{"sg":1022.44},
@@ -64,16 +68,51 @@ public class StormGlassApiServiceTest extends BaseIntegrationIntegrationTest {
         assertEquals(astroUrl, expectedAstroUrl);
     }
 
-    @Test // this method actually tests the endpoints for use during development TODO - mock this test for production
-    public void obtainDataTest() throws JsonProcessingException {
+    @Test
+    public void obtainTestData_UnitTest_WithMocks() {
         Instant instant = Instant.parse("2024-07-12T21:00:00.00z");
-        StormGlassApiService stormGlassApiService = new StormGlassApiService();
+        ResponseDataForTest responseDataForTest = new ResponseDataForTest();
+        Map<String, List<String>> headers = new HashMap<>();
+        headers.put("header", List.of("header1", "header2"));
+        List<ApiResponse> expectedResponses;
+        try {
+            expectedResponses = List.of(
+                    new ApiResponse(200, headers, responseDataForTest.getWeatherDataString()),
+                    new ApiResponse(200, headers, responseDataForTest.getAstrologicalDataString()),
+                    new ApiResponse(200, headers, responseDataForTest.getTideDataString())
+            );
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to obtain expected responses", e);
+        }
+
+        StormGlassApiService stormGlassApiService = mock(StormGlassApiService.class);
+        when(stormGlassApiService.obtainData(instant, 41.6, -70.8)).thenReturn(expectedResponses);
+
         List<ApiResponse> data = stormGlassApiService.obtainData(instant, 41.6, -70.8);
         ObjectMapper om = new ObjectMapper();
-        JsonNode expectedNode = om.readTree(expectedResponse);
-        JsonNode dataNode = om.readTree(data.get(0).getBody());
-        assertEquals(expectedNode.get("humidity"), dataNode.get("humidity"));
-        assertEquals(expectedNode.get("astronomicalDusk"), dataNode.get("astronomicalDusk"));
-        assertEquals(expectedNode.get("moonFraction"), dataNode.get("moonFraction"));
+        JsonNode expectedNode, weatherNode, astrologicalNode, tideNode;
+        try {
+            expectedNode = om.readTree(expectedResponse);
+            weatherNode = om.readTree(data.get(0).getBody());
+            astrologicalNode = om.readTree(data.get(1).getBody());
+            tideNode = om.readTree(data.get(2).getBody());
+
+        } catch (JsonMappingException e) {
+            throw new RuntimeException("Json Mapping Error", e);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Json Processing Error", e);
+        }
+
+        Double expectedHumidity = expectedNode.get(0).get("hours").get(0).get("humidity").get("sg").asDouble();
+        Double expectedMoonFraction = expectedNode.get(2).get("data").get(0).get("moonFraction").asDouble();
+        Double expectedHeight = expectedNode.get(1).get("data").get(0).get("height").asDouble();
+
+        Double actualHumidity = weatherNode.get("hours").get(0).get("humidity").get("sg").asDouble();
+        Double actualMoonFraction = astrologicalNode.get("data").get(0).get("moonFraction").asDouble();
+        Double actualHeight = tideNode.get("data").get(0).get("height").asDouble();
+
+        assertEquals(expectedHumidity, actualHumidity);
+        assertEquals(expectedMoonFraction, actualMoonFraction);
+        assertEquals(expectedHeight, actualHeight);
     }
 }
