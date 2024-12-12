@@ -39,7 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/angler/**").hasRole("ANGLER")
                         .requestMatchers("/hello").hasAnyRole("ANGLER", "ADMIN")
-                        .requestMatchers("/", "/home", "/login", "/knockKnock").permitAll()
+                        .requestMatchers("/", "/home", "/login", "/knockKnock", "/signup").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

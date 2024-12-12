@@ -6,6 +6,7 @@ import com.fishingLog.spring.model.Angler;
 import com.fishingLog.spring.repository.AnglerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,9 +16,11 @@ import java.util.Optional;
 public class AnglerService {
     private static final Logger logger = LoggerFactory.getLogger(AnglerService.class);
     private final AnglerRepository anglerRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public AnglerService(AnglerRepository anglerRepository) {
+    public AnglerService(AnglerRepository anglerRepository, PasswordEncoder passwordEncoder) {
         this.anglerRepository = anglerRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Angler> findAllAnglers() {
@@ -36,6 +39,8 @@ public class AnglerService {
             logger.error("Angler already exists with email: {}", angler.getEmail());
             throw new EmailAlreadyExistsException("Angler already exists with email: " + angler.getEmail());
         });
+
+        angler.setPassword(passwordEncoder.encode(angler.getPassword()));
 
         logger.info("Saving angler with email: {}", angler.getEmail());
         return anglerRepository.save(angler);
@@ -59,7 +64,7 @@ public class AnglerService {
         existingAngler.setUsername(anglerDetails.getUsername());
         existingAngler.setEmail(anglerDetails.getEmail());
         existingAngler.setRole(anglerDetails.getRole());
-        existingAngler.setPassword(anglerDetails.getPassword());
+        existingAngler.setPassword(passwordEncoder.encode(anglerDetails.getPassword()));
         existingAngler.setUpdatedAt(anglerDetails.getUpdatedAt());
 
         logger.info("Updating angler with id: {}", anglerDetails.getId());

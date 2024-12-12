@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Instant;
@@ -38,11 +39,13 @@ import static org.mockito.Mockito.when;
 public class AnglerServiceUnitTest {
     private AnglerRepository anglerRepository;
     private AnglerService anglerService;
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setup() {
         anglerRepository = mock(AnglerRepository.class);
-        anglerService = new AnglerService(anglerRepository);
+        passwordEncoder = mock(PasswordEncoder.class);
+        anglerService = new AnglerService(anglerRepository, passwordEncoder);
     }
 
     @Test

@@ -4,9 +4,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fishingLog.FishingLogApplication;
+import com.fishingLog.spring.service.integration.BaseIntegrationIntegrationTest;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -18,9 +24,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@SpringBootTest(classes = FishingLogApplication.class)
+@AutoConfigureMockMvc
+@ExtendWith(MockitoExtension.class)
+@ActiveProfiles("UnitTest")
 @Tag("unit")
-public class StormGlassApiServiceTest {
+public class StormGlassApiServiceTest extends BaseIntegrationIntegrationTest {
     private static final String expectedResponse = """
             [{"hours":[{"airTemperature":{"sg":23.38},"cloudCover":{"sg":43.7},"currentDirection":{"sg":321.8},
             "currentSpeed":{"sg":0.06},"gust":{"sg":13.53},"humidity":{"sg":90.9},"pressure":{"sg":1022.44},
