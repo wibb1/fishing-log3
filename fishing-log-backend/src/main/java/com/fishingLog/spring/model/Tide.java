@@ -69,11 +69,11 @@ public class Tide {
         if (this == o) return true;
         if (!(o instanceof Tide tide)) return false;
 
-        if (getHeight() != null ? !getHeight().equals(tide.getHeight()) : tide.getHeight() != null) return false;
+        if (getTideStation() != null ? getTideStation().equals(tide.getTideStation()) : tide.getTideStation() != null)
+            return false;
         if (getTime() != null ? !isTimeEqual(tide) : tide.getTime() != null) return false;
-        if (getType() != null ? !getType().equals(tide.getType()) : tide.getType() != null) return false;
-        if (getRecord() != null ? !getRecord().equals(tide.getRecord()) : tide.getRecord() != null) return false;
-        return getTideStation() != null ? getTideStation().equals(tide.getTideStation()) : tide.getTideStation() == null;
+        if (getHeight() != null ? !getHeight().equals(tide.getHeight()) : tide.getHeight() != null) return false;
+        return (getType() != null ? !getType().equals(tide.getType()) : tide.getType() == null);
     }
     private boolean isTimeEqual(Tide tide) {
         if (this.time == null || tide.time == null) {
