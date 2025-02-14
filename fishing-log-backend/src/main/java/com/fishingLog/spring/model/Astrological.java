@@ -54,6 +54,10 @@ public class Astrological {
     private Instant sunset;
     @Column
     private Instant time;
+    @Column
+    private Instant nauticalDawn;
+    @Column
+    private Instant nauticalDusk;
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "text", column = @Column(name = "closest_moon_text")),
@@ -84,6 +88,8 @@ public class Astrological {
         this.sunrise = Instant.parse(dataJson.get("sunrise").asText());
         this.sunset = Instant.parse(dataJson.get("sunset").asText());
         this.time = Instant.parse(dataJson.get("time").asText());
+        this.nauticalDawn = Instant.parse(dataJson.get("nauticalDawn").asText());
+        this.nauticalDusk = Instant.parse(dataJson.get("nauticalDusk").asText());
         ObjectMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
         this.closestMoonPhase = mapper.convertValue(dataJson.get("moonPhase").get("closest"), MoonPhase.class);
         this.currentMoonPhase = mapper.convertValue(dataJson.get("moonPhase").get("current"), MoonPhase.class);
@@ -99,6 +105,8 @@ public class Astrological {
         this.sunrise = (Instant) map.get("sunrise");
         this.sunset = (Instant) map.get("sunset");
         this.time = (Instant) map.get("time");
+        this.nauticalDawn = (Instant) map.get("nauticalDawn");
+        this.nauticalDusk = (Instant) map.get("nauticalDusk");
         this.closestMoonPhase = (MoonPhase) map.get("closest");
         this.currentMoonPhase = (MoonPhase) map.get("current");
     }
@@ -114,6 +122,8 @@ public class Astrological {
             case "sunrise" -> this.sunrise = Conversions.setTimeWithDateString(time);
             case "sunset" -> this.sunset = Conversions.setTimeWithDateString(time);
             case "time" -> this.time = Conversions.setTimeWithDateString(time);
+            case "nauticalDawn" -> this.nauticalDawn = Conversions.setTimeWithDateString(time);
+            case "nauticalDusk" -> this.nauticalDusk = Conversions.setTimeWithDateString(time);
             default -> throw new IllegalArgumentException("Invalid field: " + field);
         }
     }

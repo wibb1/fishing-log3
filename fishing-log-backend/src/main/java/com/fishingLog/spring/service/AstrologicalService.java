@@ -65,6 +65,8 @@ public class AstrologicalService {
         existingAstrological.setSunrise(astrologicalDetails.getSunrise());
         existingAstrological.setSunset(astrologicalDetails.getSunset());
         existingAstrological.setTime(astrologicalDetails.getTime());
+        existingAstrological.setNauticalDawn(astrologicalDetails.getNauticalDawn());
+        existingAstrological.setNauticalDusk(astrologicalDetails.getNauticalDusk());
 
         logger.info("Updating astrological record with id: {}", astrologicalDetails.getId());
         return astrologicalRepository.save(existingAstrological);
