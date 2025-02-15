@@ -31,6 +31,7 @@ public class StormGlassAstrologicalConverter implements StormGlassDataConverter 
                 put("time", "Instant");
                 put("closest", "MoonPhase");
                 put("current", "MoonPhase");
+                put("moonFraction", "Double");
             }
         }
     };
@@ -53,6 +54,7 @@ public class StormGlassAstrologicalConverter implements StormGlassDataConverter 
                         MoonPhase moonPhase = new MoonPhase(dataJson.get("moonPhase").get(each));
                         responseData.put(each, moonPhase);
                     }
+                    case "Double" -> responseData.put(each, dataJson.get(each).asDouble());
                     default -> throw new IOException("Unrecognized class type in StormGlass Astrological Converter");
                 }
             }
