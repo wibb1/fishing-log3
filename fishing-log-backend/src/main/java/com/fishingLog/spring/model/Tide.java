@@ -73,7 +73,7 @@ public class Tide {
             return false;
         if (getTime() != null ? !isTimeEqual(tide) : tide.getTime() != null) return false;
         if (getHeight() != null ? !getHeight().equals(tide.getHeight()) : tide.getHeight() != null) return false;
-        return (getType() != null ? !getType().equals(tide.getType()) : tide.getType() == null);
+        return (getType() != null ? getType().equals(tide.getType()) : tide.getType() == null);
     }
     private boolean isTimeEqual(Tide tide) {
         if (this.time == null || tide.time == null) {
