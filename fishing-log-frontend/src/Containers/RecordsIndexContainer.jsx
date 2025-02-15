@@ -1,29 +1,22 @@
-import { useState, useEffect } from 'react';
-
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import RecordTile from '../Components/RecordTile';
 
 const RecordsIndexContainer = () => {
 	const [records, setRecord] = useState([]);
 	const [user, setUser] = useState([]);
 
-	useEffect(() => {
-		fetch('http://localhost:8080/api/v1/records')
+  useEffect(() => {
+		axios
+			.get("/api/v1/records")
 			.then((response) => {
-				if (response.ok) {
-					return response;
-				} else {
-					let errorMessage = `${response.status} (${response.statusText})`,
-						error = new Error(errorMessage);
-					throw error;
-				}
+				setRecord(response.data.records.records);
+				setUser(response.data.user);
 			})
-			.then((response) => response.json())
-			.then((response) => {
-				setRecord(response.records.records);
-				setUser(response.user);
-			})
-			.catch((error) => console.error(`error in fetch: ${error.message}`));
-	}, []);
+			.catch((error) => {
+				console.error(`Error in fetch: ${error.message}`);
+			});
+  }, []);
 	
 	const recordTiles = records.map((record) => {
     

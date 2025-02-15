@@ -82,7 +82,7 @@ const ShowTile = ({ record, species }) => {
 								<div className="tile is-parent">
 									<article className={`tile is-child notification ${success_color(record.success)} center`}>
 										<figure className="image is-fullwidth">
-											<img src="../../public/images/480x640.png"></img>
+											<img src="../../images/480x640.png"></img>
 										</figure>
 									</article>
 								</div>

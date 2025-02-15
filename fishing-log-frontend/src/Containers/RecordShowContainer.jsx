@@ -1,33 +1,24 @@
-import { useState, useEffect } from "react";
-import ShowTile from "../Components/ShowTile";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import axios from "axios";
+import ShowTile from "../Components/ShowTile";
 
 const RecordShowContainer = () => {
 	const [recordState, setRecordState] = useState({});
 	const [speciesState, setSpeciesState] = useState({});
+	const { id } = useParams();
 
-	const id = useParams();
-
-	useEffect(() => {
-		fetch(`/api/v1/records/${id}`)
+  useEffect(() => {
+		axios
+			.get(`/api/v1/records/${id}`)
 			.then((response) => {
-				if (response.ok) {
-					return response;
-				} else {
-					let errorMessage = `${response.status} (${response.statusText})`,
-						error = new Error(errorMessage);
-					throw error;
-				}
+				setRecordState(response.data.record);
+				setSpeciesState(response.data.record.species);
 			})
-			.then((response) => response.json())
-			.then((body) => {
-				setRecordState(body.record);
-				setSpeciesState(body.record.species);
-			})
-			.catch((error) =>
-				console.error(`Error in fetch: ${error.message}`)
-			);
-	}, [id]);
+			.catch((error) => {
+				console.error(`Error in fetch: ${error.message}`);
+			});
+  }, [id]);
 
 	return <ShowTile record={recordState} species={speciesState} />;
 };
