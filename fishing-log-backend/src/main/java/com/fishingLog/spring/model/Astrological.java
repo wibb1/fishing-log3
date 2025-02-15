@@ -59,7 +59,7 @@ public class Astrological {
     @Column
     private Instant nauticalDusk;
     @Column
-    private Integer moonFraction;
+    private Double moonFraction;
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "text", column = @Column(name = "closest_moon_text")),
@@ -92,7 +92,7 @@ public class Astrological {
         this.time = Instant.parse(dataJson.get("time").asText());
         this.nauticalDawn = Instant.parse(dataJson.get("nauticalDawn").asText());
         this.nauticalDusk = Instant.parse(dataJson.get("nauticalDusk").asText());
-        this.moonFraction = dataJson.get("moonFraction").asInt();
+        this.moonFraction = dataJson.get("moonFraction").asDouble();
         ObjectMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
         this.closestMoonPhase = mapper.convertValue(dataJson.get("moonPhase").get("closest"), MoonPhase.class);
         this.currentMoonPhase = mapper.convertValue(dataJson.get("moonPhase").get("current"), MoonPhase.class);
@@ -108,7 +108,7 @@ public class Astrological {
         this.sunrise = (Instant) map.get("sunrise");
         this.sunset = (Instant) map.get("sunset");
         this.time = (Instant) map.get("time");
-        this.moonFraction = (Integer) (map.get("moonFraction"));
+        this.moonFraction = (Double) (map.get("moonFraction"));
         this.nauticalDawn = (Instant) map.get("nauticalDawn");
         this.nauticalDusk = (Instant) map.get("nauticalDusk");
         this.closestMoonPhase = (MoonPhase) map.get("closest");

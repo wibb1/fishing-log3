@@ -67,6 +67,7 @@ public class ResponseDataForTest {
                 put("sunrise", Instant.parse("2024-07-12T09:21:12+00:00")); //1720776072);
                 put("sunset", Instant.parse("2024-07-13T00:18:43+00:00")); //1720829923);
                 put("time", Instant.parse("2024-07-12T00:00:00+00:00")); //1720742400);
+                put("moonFraction", 0.3267293520444956);
                 put("closest", new MoonPhase("First quarter", Instant.parse("2024-07-13T15:55:00+00:00"), 0.25)); //1720886100
                 put("current", new MoonPhase("Waxing crescent", Instant.parse("2024-07-12T00:00:00+00:00"), 0.19367802604339596)); //1720742400L
             }
