@@ -1,7 +1,9 @@
 package com.fishingLog.spring.service.integration;
 
 import com.fishingLog.FishingLogApplication;
+import com.fishingLog.spring.model.Record;
 import com.fishingLog.spring.model.Tide;
+import com.fishingLog.spring.repository.RecordRepository;
 import com.fishingLog.spring.repository.TideRepository;
 import com.fishingLog.spring.service.TideService;
 import org.junit.jupiter.api.AfterEach;
@@ -13,14 +15,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = FishingLogApplication.class)
@@ -31,22 +37,52 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TideServiceIntegrationTest extends BaseIntegrationIntegrationTest {
     @Autowired
     public TideRepository repository;
-
+    @Autowired
+    public RecordRepository recordRepository;
     @Autowired
     TideService service;
 
     private Tide tide;
 
+    private Record record;
+
     @BeforeEach
     public void start() {
         Instant instant = Instant.now();
-        tide = new Tide(1.2, instant , "Gamgee");
+        tide = new Tide(1.2, instant, "Gamgee");
+        tide = repository.save(tide);
+
+        Set<Tide> tides = new HashSet<>();
+        tides.add(tide);
+
+        // Use the RecordBuilder to create a Record instance
+        record = new Record.RecordBuilder()
+                .setName("Expected Record Name")
+                .setSuccess("Success")
+                .setAnglerId(1L)
+                .setCreatedAt(Instant.now())
+                .setUpdatedAt(Instant.now())
+                .setBody("Test Body")
+                .setLatitude(41.6)
+                .setLongitude(-70.8)
+                .setDatetime(Instant.parse("2024-07-12T21:00:00+00:00"))
+                .setTimezone("UTC")
+                .setTides(tides)
+                .build();
+
+        record = recordRepository.save(record);
+        Set<Record> records = new HashSet<>();
+        records.add(record);
+        tide.setRecords(records);
+        tide = repository.save(tide);
     }
 
     @AfterEach
     public void stop() {
         repository.deleteAll();
+        recordRepository.deleteAll();
         tide = null;
+        record = null;
     }
 
     @DisplayName("JUnit test for saveTide method")
@@ -60,8 +96,24 @@ public class TideServiceIntegrationTest extends BaseIntegrationIntegrationTest {
         assertEquals(savedTide, retrieved.get());
     }
 
+    @DisplayName("JUnit test for many-to-many relationship between Tide and Record")
+    @Test
+    @Transactional
+    public void testTideAndRecordRelationship() {
+        List<Record> records = recordRepository.findAll();
+        assertFalse(records.isEmpty());
+
+        Tide recordTide = records.get(0).getTides().iterator().next();
+        assertEquals(tide, recordTide);
+
+        List<Tide> tides = repository.findAll();
+        assertFalse(tides.isEmpty());
+        assertTrue(tides.get(0).getRecords().contains(record));
+    }
+
     @DisplayName("JUnit test for saveTide method when duplicate it returns existing Tide")
     @Test
+    @Transactional
     public void testTideIsDuplicateDoesNotSaveDuplicate() {
         Tide savedTide = service.saveTide(tide);
         assertEquals(tide, savedTide);
@@ -69,7 +121,7 @@ public class TideServiceIntegrationTest extends BaseIntegrationIntegrationTest {
         Optional<Tide> retrieved = service.findEqualTide(savedTide);
         assertTrue(retrieved.isPresent());
         assertEquals(savedTide.getHeight(), retrieved.get().getHeight());
-        assertEquals(savedTide.getRecord(), retrieved.get().getRecord());
+        assertEquals(savedTide.getRecords(), retrieved.get().getRecords());
         assertEquals(savedTide.getTideStation(), retrieved.get().getTideStation());
         assertEquals(savedTide.getType(), retrieved.get().getType());
 

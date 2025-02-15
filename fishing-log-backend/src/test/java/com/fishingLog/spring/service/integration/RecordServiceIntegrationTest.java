@@ -22,8 +22,10 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -70,7 +72,9 @@ public class RecordServiceIntegrationTest extends BaseIntegrationIntegrationTest
         when(apiService.obtainData(any(), any(Double.class), any(Double.class))).thenReturn(mockResponses);
         when(weatherService.createWeather(any())).thenReturn(new Weather());
         when(astrologicalService.createAstrological(any())).thenReturn(new Astrological());
-        when(tideService.createTides(any())).thenReturn(List.of(new Tide()));
+        Set<Tide> mockTides = new HashSet<>();
+        mockTides.add(new Tide());
+        when(tideService.createTides(any())).thenReturn(mockTides);
 
         Record record = new Record.RecordBuilder()
                 .setName("Test Record")

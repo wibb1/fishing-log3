@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -18,12 +19,14 @@ import lombok.ToString;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "records")
 @Entity
 @Table(name = "tide")
 public class Tide {
@@ -40,9 +43,8 @@ public class Tide {
     @Column
     private String type;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "record_id", referencedColumnName = "id")
-    private Record record;
+    @ManyToMany
+    private Set<Record> records;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "tide_station_id", referencedColumnName = "id")
@@ -75,14 +77,21 @@ public class Tide {
         if (getHeight() != null ? !getHeight().equals(tide.getHeight()) : tide.getHeight() != null) return false;
         return (getType() != null ? getType().equals(tide.getType()) : tide.getType() == null);
     }
+
     private boolean isTimeEqual(Tide tide) {
         if (this.time == null || tide.time == null) {
             return this.time == tide.time;
         }
         return ChronoUnit.MINUTES.between(this.time, tide.time) <= 30;
     }
+
     @Override
     public int hashCode() {
-        return Objects.hash(getHeight(), time, getType(), getRecord(), getTideStation());
+        return Objects.hash(getHeight(), time, getType(), getRecords(), getTideStation());
+    }
+
+    public Set<Record> getRecords() {
+        if (records == null) return Collections.emptySet();
+        return records;
     }
 }

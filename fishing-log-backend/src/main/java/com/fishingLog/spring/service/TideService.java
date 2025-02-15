@@ -10,10 +10,11 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class TideService {
@@ -50,7 +51,7 @@ public class TideService {
         tideRepository.deleteById(id);
     }
 
-    public List<Tide> createTides(String tideRawData) {
+    public Set<Tide> createTides(String tideRawData) {
         Map<String, Object> tideData;
         try {
             tideData = tideConverter.dataConverter(tideRawData);
@@ -66,7 +67,7 @@ public class TideService {
             tideStation = tideStationService.saveTideStation(tideStation);
             logger.info("Tide station saved: {}", tideStation);
         }
-        List<Tide> tides = new ArrayList<>();
+        Set<Tide> tides = new HashSet<>();
         for (String tideName : tideNames) {
             if (tideData.containsKey(tideName)) {
                 Tide tide = (Tide) tideData.get(tideName);

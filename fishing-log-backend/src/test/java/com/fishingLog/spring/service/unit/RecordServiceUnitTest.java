@@ -38,9 +38,11 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -166,8 +168,9 @@ public class RecordServiceUnitTest {
         weather.setId(1L);
         Astrological astrological = new Astrological(testdata.getAstrologicalDataJsonNode().get("data").get(0));
         astrological.setId(1L);
-        List<Tide> tides = List.of(new Tide(testdata.getTideDataJsonNode().get("data").get(0)));
-        tides.get(0).setId(1L);
+        Set<Tide> tides = new HashSet<>();
+        tides.add(new Tide(testdata.getTideDataJsonNode().get("data").get(0)));
+        tides.iterator().next().setId(1L);
 
         when(weatherService.createWeather(anyString())).thenReturn(weather);
         when(tideService.createTides(any())).thenReturn(tides);

@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
@@ -19,8 +18,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 @Setter
@@ -62,8 +60,8 @@ public class Record {
     @JoinColumn(name = "weather_id", referencedColumnName = "id")
     private Weather weather;
 
-    @OneToMany(mappedBy = "record", orphanRemoval = true)
-    private List<Tide> tides = new ArrayList<>();
+    @ManyToMany(mappedBy = "records")
+    private Set<Tide> tides;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "astrological_id", referencedColumnName = "id")
@@ -82,7 +80,7 @@ public class Record {
         private String timezone;
         private Set<Angler> anglers;
         private Weather weather;
-        private List<Tide> tides = new ArrayList<>();
+        private Set<Tide> tides = new HashSet<>();
         private Astrological astrological;
 
         public RecordBuilder setName(String name) {
@@ -145,7 +143,7 @@ public class Record {
             return this;
         }
 
-        public RecordBuilder setTides(List<Tide> tides) {
+        public RecordBuilder setTides(Set<Tide> tides) {
             this.tides = tides;
             return this;
         }

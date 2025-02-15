@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class RecordService {
@@ -81,7 +82,7 @@ public class RecordService {
 
         Weather weather = weatherService.createWeather(responses.get(0).getBody());
         Astrological astrological = astrologicalService.createAstrological(responses.get(1).getBody());
-        List<Tide> tides = tideService.createTides(responses.get(2).getBody());
+        Set<Tide> tides = tideService.createTides(responses.get(2).getBody());
 
         if (tides == null || tides.isEmpty()) {
             throw new IllegalArgumentException("Tide data is empty or null");
