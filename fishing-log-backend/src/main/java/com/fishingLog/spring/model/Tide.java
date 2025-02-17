@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,7 +27,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString(exclude = "records")
+@ToString(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "tide")
 public class Tide {
@@ -35,12 +36,15 @@ public class Tide {
     private Long id;
 
     @Column
+    @EqualsAndHashCode.Include
     private Double height;
 
     @Column
+    @EqualsAndHashCode.Include
     private Instant time;
 
     @Column
+    @EqualsAndHashCode.Include
     private String type;
 
     @ManyToMany
@@ -71,8 +75,9 @@ public class Tide {
         if (this == o) return true;
         if (!(o instanceof Tide tide)) return false;
 
-        if (getTideStation() != null ? getTideStation().equals(tide.getTideStation()) : tide.getTideStation() != null)
+        if (getTideStation() != null ? getTideStation().equals(tide.getTideStation()) : tide.getTideStation() != null) {
             return false;
+        }
         if (getTime() != null ? !isTimeEqual(tide) : tide.getTime() != null) return false;
         if (getHeight() != null ? !getHeight().equals(tide.getHeight()) : tide.getHeight() != null) return false;
         return (getType() != null ? getType().equals(tide.getType()) : tide.getType() == null);
@@ -87,7 +92,7 @@ public class Tide {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getHeight(), time, getType(), getRecords(), getTideStation());
+        return Objects.hash(getHeight(), time, getType(), getTideStation());
     }
 
     public Set<Record> getRecords() {

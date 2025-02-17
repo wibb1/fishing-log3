@@ -21,20 +21,20 @@ public class AnglerViewController {
         this.anglerService = anglerService;
     }
 
-    @GetMapping("/signup")
-    public String showSignUpForm(Model model) {
+    @GetMapping("/signup2")
+    public String showSignUp2Form(Model model) {
         model.addAttribute("angler", new Angler());
-        return "signup";
+        return "signup2";
     }
 
-    @PostMapping("/signup")
-    public String signUp(@ModelAttribute Angler angler) {
+    @PostMapping("/signup2")
+    public String signUp2(@ModelAttribute Angler angler) {
         Instant time = Instant.now();
         angler.setCreatedAt(time);
         angler.setUpdatedAt(time);
         angler.setRole("ANGLER");
         anglerService.saveAngler(angler);
-        return "redirect:/login";
+        return "redirect:/login2";
     }
 
     @GetMapping("/anglers/{id}")

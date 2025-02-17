@@ -24,7 +24,7 @@ import java.util.Set;
 @Setter
 @Getter
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"angler_id", "latitude", "longitude", "datetime", "timezone"})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 @Entity
 @Table(name = "record")
@@ -32,8 +32,10 @@ public class Record {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @EqualsAndHashCode.Include
     @Column(nullable = false)
     private String name;
+    @EqualsAndHashCode.Include
     @Column(nullable = false)
     private String success;
     @Column(nullable = false)
@@ -43,14 +45,19 @@ public class Record {
     @Column(nullable = false)
     private Instant updated_at;
     @Column(nullable = false)
+    @EqualsAndHashCode.Include
     private String body;
+    @EqualsAndHashCode.Include
     @Column(nullable = false)
     private Double latitude;
+    @EqualsAndHashCode.Include
     @Column(nullable = false)
     private Double longitude;
     @Column(nullable = false)
+    @EqualsAndHashCode.Include
     private Instant datetime;
     @Column(nullable = false)
+    @EqualsAndHashCode.Include
     private String timezone;
 
     @ManyToMany(mappedBy = "records")

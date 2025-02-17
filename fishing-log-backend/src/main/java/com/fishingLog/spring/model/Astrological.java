@@ -30,34 +30,46 @@ import java.util.Map;
 @NoArgsConstructor
 @Entity
 @ToString
-@EqualsAndHashCode(exclude = {"id", "record"})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "astrological")
 public class Astrological {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @EqualsAndHashCode.Include
     @Column
     private Instant astronomicalDawn;
+    @EqualsAndHashCode.Include
     @Column
     private Instant astronomicalDusk;
+    @EqualsAndHashCode.Include
     @Column
     private Instant civilDawn;
+    @EqualsAndHashCode.Include
     @Column
     private Instant civilDusk;
+    @EqualsAndHashCode.Include
     @Column
     private Instant moonrise;
+    @EqualsAndHashCode.Include
     @Column
     private Instant moonset;
+    @EqualsAndHashCode.Include
     @Column
     private Instant sunrise;
+    @EqualsAndHashCode.Include
     @Column
     private Instant sunset;
+    @EqualsAndHashCode.Include
     @Column
     private Instant time;
+    @EqualsAndHashCode.Include
     @Column
     private Instant nauticalDawn;
+    @EqualsAndHashCode.Include
     @Column
     private Instant nauticalDusk;
+    @EqualsAndHashCode.Include
     @Column
     private Double moonFraction;
     @Embedded

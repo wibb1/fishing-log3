@@ -25,7 +25,7 @@ import java.util.Set;
 @Setter @Getter
 @Entity
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"id", "password", "createdAt", "updatedAt"})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(exclude = {"password"})
 @Table(name="angler", uniqueConstraints = {
         @UniqueConstraint(columnNames = "username"), @UniqueConstraint(columnNames = "email")
@@ -39,8 +39,10 @@ public class Angler implements UserDetails {
     private String firstName;
     @Column(nullable = false)
     private String lastName;
+    @EqualsAndHashCode.Include
     @Column(nullable = false)
     private String username;
+    @EqualsAndHashCode.Include
     @Column(nullable = false)
     private String email;
     @Column(nullable = false)

@@ -18,7 +18,7 @@ import java.time.Instant;
 @Entity
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode(of = {"scientificName"})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name="species")
 public class Species {
     @Id
@@ -26,6 +26,7 @@ public class Species {
     private Long id;
     @Column
     private String commonName;
+    @EqualsAndHashCode.Include
     @Column
     private String scientificName;
     @Column

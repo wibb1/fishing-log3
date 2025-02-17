@@ -20,7 +20,7 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode(exclude = {"id"})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "tide_station", uniqueConstraints = {@UniqueConstraint(columnNames = {"station_name"})})
 public class TideStation {
@@ -29,15 +29,19 @@ public class TideStation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @EqualsAndHashCode.Include
     @Column(name = "station_name", nullable = false)
     private String stationName;
 
+    @EqualsAndHashCode.Include
     @Column(name = "station_lat", nullable = false)
     private Double stationLat;
 
+    @EqualsAndHashCode.Include
     @Column(name = "station_lng", nullable = false)
     private Double stationLng;
 
+    @EqualsAndHashCode.Include
     @Column(name = "station_source", nullable = false)
     private String stationSource;
 

@@ -25,58 +25,82 @@ import java.util.Map;
 @Setter
 @Getter
 @ToString
-@EqualsAndHashCode(exclude = {"id", "records"})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 public class Weather {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @EqualsAndHashCode.Include
     @Column
     private Double airTemperature;
+    @EqualsAndHashCode.Include
     @Column
     private Double cloudCover;
+    @EqualsAndHashCode.Include
     @Column
     private Double currentDirection;
+    @EqualsAndHashCode.Include
     @Column
     private Double currentSpeed;
+    @EqualsAndHashCode.Include
     @Column
     private Double gust;
+    @EqualsAndHashCode.Include
     @Column
     private Double humidity;
+    @EqualsAndHashCode.Include
     @Column
     private Double pressure;
+    @EqualsAndHashCode.Include
     @Column
     private Double seaLevel;
+    @EqualsAndHashCode.Include
     @Column
     private Double secondarySwellDirection;
+    @EqualsAndHashCode.Include
     @Column
     private Double secondarySwellHeight;
+    @EqualsAndHashCode.Include
     @Column
     private Double secondarySwellPeriod;
+    @EqualsAndHashCode.Include
     @Column
     private Double swellDirection;
+    @EqualsAndHashCode.Include
     @Column
     private Double swellHeight;
+    @EqualsAndHashCode.Include
     @Column
     private Double swellPeriod;
+    @EqualsAndHashCode.Include
     @Column
     private Instant time;
+    @EqualsAndHashCode.Include
     @Column
     private Double visibility;
+    @EqualsAndHashCode.Include
     @Column
     private Double waveDirection;
+    @EqualsAndHashCode.Include
     @Column
     private Double waveHeight;
+    @EqualsAndHashCode.Include
     @Column
     private Double wavePeriod;
+    @EqualsAndHashCode.Include
     @Column
     private Double windDirection;
+    @EqualsAndHashCode.Include
     @Column
     private Double windSpeed;
+    @EqualsAndHashCode.Include
     @Column
     private Double windWaveDirection;
+    @EqualsAndHashCode.Include
     @Column
     private Double windWaveHeight;
+    @EqualsAndHashCode.Include
     @Column
     private Double windWavePeriod;
 
