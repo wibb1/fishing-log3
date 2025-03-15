@@ -1,6 +1,5 @@
 package com.fishingLog.spring.service.unit;
 
-import com.fishingLog.FishingLogApplication;
 import com.fishingLog.spring.exception.EmailAlreadyExistsException;
 import com.fishingLog.spring.exception.ResourceNotFoundException;
 import com.fishingLog.spring.model.Angler;
@@ -11,12 +10,11 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,8 +29,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = FishingLogApplication.class)
-@AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("UnitTest")
 @Tag("unit")
@@ -51,7 +47,7 @@ public class AnglerServiceUnitTest {
     @Test
     void testFindAllAnglers() {
         Angler angler = new Angler(1L, "Samwise", "Gamgee", "SamwiseGamgee",
-                "SamWizeGamGee@noplace.com", "USER", "password", Instant.now(), Instant.now());
+                "SamWizeGamGee@noplace.com", Collections.singletonList("USER"), "password", Instant.now(), Instant.now());
         List<Angler> anglers = List.of(angler);
         when(anglerRepository.findAll()).thenReturn(anglers);
 
@@ -64,7 +60,7 @@ public class AnglerServiceUnitTest {
     @Test
     void testFindAnglerById_Success() {
         Angler angler = new Angler(1L, "Samwise", "Gamgee", "SamwiseGamgee",
-                "SamWizeGamGee@noplace.com", "USER", "password", Instant.now(), Instant.now());
+                "SamWizeGamGee@noplace.com", Collections.singletonList("USER"), "password", Instant.now(), Instant.now());
 
         when(anglerRepository.findById(1L)).thenReturn(Optional.of(angler));
 
@@ -88,22 +84,30 @@ public class AnglerServiceUnitTest {
     @Test
     void testSaveAngler_Success() {
         Angler angler = new Angler(1L, "Samwise", "Gamgee", "SamwiseGamgee",
-                "SamWizeGamGee@noplace.com", "USER", "password", Instant.now(), Instant.now());
+                "SamWizeGamGee@noplace.com", Collections.singletonList("USER"), "password", Instant.now(), Instant.now());
+        String encodedPassword = "encodedPassword";
 
         when(anglerRepository.findByEmail("SamWizeGamGee@noplace.com")).thenReturn(Optional.empty());
-        when(anglerRepository.save(angler)).thenReturn(angler);
+        when(passwordEncoder.encode("password")).thenReturn(encodedPassword);
+        when(anglerRepository.save(any(Angler.class))).thenAnswer(invocation -> {
+            Angler savedAngler = invocation.getArgument(0);
+            savedAngler.setPassword(encodedPassword);
+            return savedAngler;
+        });
 
         Angler result = anglerService.saveAngler(angler);
 
         assertNotNull(result);
+        assertEquals(encodedPassword, result.getPassword());
         verify(anglerRepository, times(1)).findByEmail("SamWizeGamGee@noplace.com");
-        verify(anglerRepository, times(1)).save(angler);
+        verify(passwordEncoder, times(1)).encode("password");
+        verify(anglerRepository, times(1)).save(any(Angler.class));
     }
 
     @Test
     void testSaveAngler_EmailAlreadyExists() {
         Angler angler = new Angler(1L, "Samwise", "Gamgee", "SamwiseGamgee",
-                "SamWizeGamGee@noplace.com", "USER", "password", Instant.now(), Instant.now());
+                "SamWizeGamGee@noplace.com", Collections.singletonList("USER"), "password", Instant.now(), Instant.now());
 
         when(anglerRepository.findByEmail("SamWizeGamGee@noplace.com")).thenReturn(Optional.of(angler));
 
@@ -116,25 +120,34 @@ public class AnglerServiceUnitTest {
 
     @Test
     void testUpdateAngler_Success() {
-        Angler existingAngler = new Angler(1L, "Samwise", "Gamgee", "SamwiseGamgee", "SamWizeGamGee@noplace.com", "USER", "password", Instant.now(), Instant.now());
-        Angler updatedAngler = new Angler(1L, "Sam", "Gamgee", "SamGamgee", "SamGamGee@noplace.com", "USER", "newpassword", Instant.now(), Instant.now());
+        Angler existingAngler = new Angler(1L, "Samwise", "Gamgee", "SamwiseGamgee", "SamWizeGamGee@noplace.com", Collections.singletonList("USER"), "password", Instant.now(), Instant.now());
+        Angler updatedAngler = new Angler(1L, "Sam", "Gamgee", "SamGamgee", "SamGamGee@noplace.com", Collections.singletonList("USER"), "newpassword", Instant.now(), Instant.now());
+        String encodedPassword = "encodedNewPassword";
 
         when(anglerRepository.findById(1L)).thenReturn(Optional.of(existingAngler));
         when(anglerRepository.findByEmail("SamGamGee@noplace.com")).thenReturn(Optional.empty());
-        when(anglerRepository.save(any())).thenReturn(updatedAngler);
+        when(passwordEncoder.encode("newpassword")).thenReturn(encodedPassword);
+        when(anglerRepository.save(any(Angler.class))).thenAnswer(invocation -> {
+            Angler savedAngler = invocation.getArgument(0);
+            savedAngler.setPassword(encodedPassword);
+            return savedAngler;
+        });
 
         Angler result = anglerService.updateAngler(updatedAngler);
 
         assertEquals("Sam", result.getFirstName());
+        assertEquals(encodedPassword, result.getPassword());
         verify(anglerRepository, times(1)).findById(1L);
-        verify(anglerRepository, times(1)).save(any());
+        verify(anglerRepository, times(1)).findByEmail("SamGamGee@noplace.com");
+        verify(passwordEncoder, times(1)).encode("newpassword");
+        verify(anglerRepository, times(1)).save(any(Angler.class));
     }
 
     @Test
     void testUpdateAngler_EmailConflict() {
-        Angler existingAngler = new Angler(1L, "Samwise", "Gamgee", "SamwiseGamgee", "SamWizeGamGee@noplace.com", "USER", "password", Instant.now(), Instant.now());
-        Angler conflictingAngler = new Angler(2L, "Sammy", "Gamgee", "SammyGamgee", "SammyGamGee@noplace.com", "USER", "password", Instant.now(), Instant.now());
-        Angler updatedAngler = new Angler(1L, "Sam", "Gamgee", "SamGamgee", "SamGamGee@noplace.com", "USER", "newpassword", Instant.now(), Instant.now());
+        Angler existingAngler = new Angler(1L, "Samwise", "Gamgee", "SamwiseGamgee", "SamWizeGamGee@noplace.com", Collections.singletonList("USER"), "password", Instant.now(), Instant.now());
+        Angler conflictingAngler = new Angler(2L, "Sammy", "Gamgee", "SammyGamgee", "SammyGamGee@noplace.com", Collections.singletonList("USER"), "password", Instant.now(), Instant.now());
+        Angler updatedAngler = new Angler(1L, "Sam", "Gamgee", "SamGamgee", "SamGamGee@noplace.com", Collections.singletonList("USER"), "newpassword", Instant.now(), Instant.now());
 
         when(anglerRepository.findById(1L)).thenReturn(Optional.of(existingAngler));
         when(anglerRepository.findByEmail("SamGamGee@noplace.com")).thenReturn(Optional.of(conflictingAngler));
@@ -143,6 +156,7 @@ public class AnglerServiceUnitTest {
 
         assertEquals("Email already in use by another angler: SamGamGee@noplace.com", exception.getMessage());
         verify(anglerRepository, times(1)).findById(1L);
+        verify(anglerRepository, times(1)).findByEmail("SamGamGee@noplace.com");
         verify(anglerRepository, times(0)).save(any());
     }
 

@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -59,13 +60,14 @@ public class AnglerService {
             }
         });
 
-        existingAngler.setFirstName(anglerDetails.getFirstName());
-        existingAngler.setLastName(anglerDetails.getLastName());
-        existingAngler.setUsername(anglerDetails.getUsername());
-        existingAngler.setEmail(anglerDetails.getEmail());
-        existingAngler.setRole(anglerDetails.getRole());
-        existingAngler.setPassword(passwordEncoder.encode(anglerDetails.getPassword()));
-        existingAngler.setUpdatedAt(anglerDetails.getUpdatedAt());
+        if (Objects.nonNull(anglerDetails.getFirstName())) existingAngler.setFirstName(anglerDetails.getFirstName());
+        if (Objects.nonNull(anglerDetails.getLastName())) existingAngler.setLastName(anglerDetails.getLastName());
+        if (Objects.nonNull(anglerDetails.getUsername())) existingAngler.setUsername(anglerDetails.getUsername());
+        if (Objects.nonNull(anglerDetails.getEmail())) existingAngler.setEmail(anglerDetails.getEmail());
+        if (Objects.nonNull(anglerDetails.getRoles())) existingAngler.setRoles(anglerDetails.getRoles());
+        if (Objects.nonNull(anglerDetails.getPassword()))
+            existingAngler.setPassword(passwordEncoder.encode(anglerDetails.getPassword()));
+        if (Objects.nonNull(anglerDetails.getUpdatedAt())) existingAngler.setUpdatedAt(anglerDetails.getUpdatedAt());
 
         logger.info("Updating angler with id: {}", anglerDetails.getId());
         return anglerRepository.save(existingAngler);

@@ -21,6 +21,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,12 +47,13 @@ public class AnglerServiceIntegrationTest extends BaseIntegrationIntegrationTest
     @BeforeEach
     public void start() {
         angler = new Angler(1L, "Samwise", "Gamgee", "SamwiseGamgee",
-                "SamWizeGamGee@noplace.com", "USER","password", Instant.now(), Instant.now());
+                "SamWizeGamGee@noplace.com", Collections.singletonList("USER"), "password", Instant.now(), Instant.now());
     }
 
     @AfterEach
     public void stop() {
         repository.deleteAll();
+        repository.flush();
         angler = null;
     }
 
@@ -124,7 +126,7 @@ public class AnglerServiceIntegrationTest extends BaseIntegrationIntegrationTest
     public void testFindAllAnglers() {
         service.saveAngler(angler);
         Angler anotherAngler = new Angler(2L, "Frodo", "Baggins", "FrodoBaggins",
-                "FrodoBaggins@noplace.com", "USER", "password", Instant.now(), Instant.now());
+                "FrodoBaggins@noplace.com", Collections.singletonList("USER"), "password", Instant.now(), Instant.now());
         service.saveAngler(anotherAngler);
 
         Iterable<Angler> anglers = service.findAllAnglers();

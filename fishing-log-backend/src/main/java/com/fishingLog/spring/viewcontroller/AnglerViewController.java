@@ -7,10 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.Instant;
+import java.util.Collections;
 
 @Controller
 public class AnglerViewController {
@@ -21,26 +21,19 @@ public class AnglerViewController {
         this.anglerService = anglerService;
     }
 
-    @GetMapping("/signup")
+    @GetMapping("/signup2")
     public String showSignUpForm(Model model) {
         model.addAttribute("angler", new Angler());
         return "signup";
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/signup2")
     public String signUp(@ModelAttribute Angler angler) {
         Instant time = Instant.now();
         angler.setCreatedAt(time);
         angler.setUpdatedAt(time);
-        angler.setRole("ANGLER");
+        angler.setRoles(Collections.singletonList("ANGLER"));
         anglerService.saveAngler(angler);
         return "redirect:/login";
-    }
-
-    @GetMapping("/anglers/{id}")
-    public String getAnglerView(@PathVariable("id") Long id, Model model) {
-        Angler angler = anglerService.findAnglerById(id).orElseThrow(() -> new IllegalArgumentException("Invalid angler Id:" + id));
-        model.addAttribute("angler", angler);
-        return "angler";
     }
 }
