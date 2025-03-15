@@ -1,5 +1,6 @@
 package com.fishingLog.spring.controller;
 
+import com.fishingLog.spring.dto.SpeciesDTO;
 import com.fishingLog.spring.model.Species;
 import com.fishingLog.spring.service.SpeciesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,26 +20,41 @@ import java.util.Optional;
 @RequestMapping(path="api/v1/species")
 public class SpeciesController {
     private final SpeciesService speciesService;
+
     @Autowired
     public SpeciesController(SpeciesService speciesService) {
         this.speciesService = speciesService;
     }
+
     @GetMapping
-    public List<Species> findAllSpecies() {
-        return speciesService.findAllSpecies();
+    public List<SpeciesDTO> findAllSpecies() {
+        List<Species> species = speciesService.findAllSpecies();
+        return species.stream()
+                .map(species1 -> new SpeciesDTO(species1))
+                .toList();
     }
+
     @GetMapping("/{id}")
-    public Optional<Species> findSpeciesById(@PathVariable("id") Long id) {
-        return speciesService.findSpeciesById(id);
+    public Optional<SpeciesDTO> findSpeciesById(@PathVariable("id") Long id) {
+        Optional<Species> species = speciesService.findSpeciesById(id);
+        return Optional.of(new SpeciesDTO(species.get()));
     }
+
     @PostMapping("/uploadSpecies")
-    public Species saveSpecies(Species species) {
-        return speciesService.saveSpecies(species);
+    public SpeciesDTO saveSpecies(Species species) {
+        Species savedSpecies = speciesService.saveSpecies(species);
+        return new SpeciesDTO(savedSpecies);
+
     }
+
     @PostMapping
-    public List<Species> saveSpecies(List<Species> species) {
-        return speciesService.saveSpecies(species);
+    public List<SpeciesDTO> saveSpecies(List<Species> species) {
+        List<Species> speciesList = speciesService.saveSpecies(species);
+        return speciesList.stream()
+                .map(species1 -> new SpeciesDTO(species1))
+                .toList();
     }
+
     @PutMapping(path="/{id}")
     public void updateSpecies(@PathVariable Long id, @RequestBody Species species) {
         Optional<Species> current = speciesService.findSpeciesById(id);

@@ -1,7 +1,6 @@
 package com.fishingLog.spring.service.unit;
 
 
-import com.fishingLog.FishingLogApplication;
 import com.fishingLog.spring.model.Species;
 import com.fishingLog.spring.repository.SpeciesRepository;
 import com.fishingLog.spring.service.SpeciesService;
@@ -10,12 +9,11 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,8 +30,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = FishingLogApplication.class)
-@AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("UnitTest")
 @Tag("unit")
@@ -51,8 +47,8 @@ public class SpeciesServiceUnitTest {
     @Test
     void findAllSpecies_ShouldReturnAllSpecies() {
         List<Species> speciesList = Arrays.asList(
-                new Species(1L, "Salmon", "Salmo salar", 10, 100, Instant.now(), Instant.now()),
-                new Species(2L, "Trout", "Oncorhynchus mykiss", 10, 100, Instant.now(), Instant.now())
+                new Species(1L, "Salmon", "Salmo salar", 10, 100, Instant.now(), Instant.now(), Collections.emptySet()),
+                new Species(2L, "Trout", "Oncorhynchus mykiss", 10, 100, Instant.now(), Instant.now(), Collections.emptySet())
         );
         when(speciesRepository.findAll()).thenReturn(speciesList);
         List<Species> result = speciesService.findAllSpecies();
@@ -63,7 +59,7 @@ public class SpeciesServiceUnitTest {
 
     @Test
     void findSpeciesById_WhenSpeciesExists_ShouldReturnSpecies() {
-        Species species = new Species(1L, "Salmon", "Salmo salar", 10, 100, Instant.now(), Instant.now());
+        Species species = new Species(1L, "Salmon", "Salmo salar", 10, 100, Instant.now(), Instant.now(), Collections.emptySet());
         when(speciesRepository.findById(1L)).thenReturn(Optional.of(species));
         Optional<Species> result = speciesService.findSpeciesById(1L);
         assertTrue(result.isPresent());
@@ -81,9 +77,9 @@ public class SpeciesServiceUnitTest {
 
     @Test
     void saveSpecies_WhenNewSpecies_ShouldSaveSpecies() {
-        Species species = new Species(1L, "Salmon", "Salmo salar", 10, 100, Instant.now(), Instant.now());
+        Species species = new Species(1L, "Salmon", "Salmo salar", 10, 100, Instant.now(), Instant.now(), Collections.emptySet());
         when(speciesRepository.findOne(any())).thenReturn(Optional.empty());
-        when(speciesRepository.save(species)).thenReturn(new Species(1L, "Salmon", "Salmo salar", 10, 100, Instant.now(), Instant.now()));
+        when(speciesRepository.save(species)).thenReturn(new Species(1L, "Salmon", "Salmo salar", 10, 100, Instant.now(), Instant.now(), Collections.emptySet()));
         Species result = speciesService.saveSpecies(species);
         assertNotNull(result.getId());
         assertEquals("Salmo salar", result.getScientificName());
@@ -92,7 +88,7 @@ public class SpeciesServiceUnitTest {
 
     @Test
     void saveSpecies_WhenSpeciesExists_ShouldReturnExistingSpecies() {
-        Species species = new Species(1L, "Salmon", "Salmo salar", 10, 100, Instant.now(), Instant.now());
+        Species species = new Species(1L, "Salmon", "Salmo salar", 10, 100, Instant.now(), Instant.now(), Collections.emptySet());
         when(speciesRepository.findOne(any())).thenReturn(Optional.of(species));
         Species result = speciesService.saveSpecies(species);
         assertEquals("Salmon", result.getCommonName());
@@ -101,13 +97,13 @@ public class SpeciesServiceUnitTest {
 
     @Test
     void saveSpeciesList_ShouldSaveNonExistingSpecies() {
-        Species species1 = new Species(1L, "Salmon", "Salmo salar", 10, 100, Instant.now(), Instant.now());
-        Species species2 = new Species(2L, "Trout", "Oncorhynchus mykiss", 10, 100, Instant.now(), Instant.now());
+        Species species1 = new Species(1L, "Salmon", "Salmo salar", 10, 100, Instant.now(), Instant.now(), Collections.emptySet());
+        Species species2 = new Species(2L, "Trout", "Oncorhynchus mykiss", 10, 100, Instant.now(), Instant.now(), Collections.emptySet());
         when(speciesRepository.findByScientificName("Salmo salar")).thenReturn(Optional.empty());
         when(speciesRepository.findByScientificName("Oncorhynchus mykiss")).thenReturn(Optional.empty());
         when(speciesRepository.saveAll(anyList())).thenReturn(Arrays.asList(
-                new Species(1L, "Salmon", "Salmo salar", 10, 100, Instant.now(), Instant.now()),
-                new Species(2L, "Trout", "Oncorhynchus mykiss", 10, 100, Instant.now(), Instant.now())
+                new Species(1L, "Salmon", "Salmo salar", 10, 100, Instant.now(), Instant.now(), Collections.emptySet()),
+                new Species(2L, "Trout", "Oncorhynchus mykiss", 10, 100, Instant.now(), Instant.now(), Collections.emptySet())
         ));
         List<Species> result = speciesService.saveSpecies(Arrays.asList(species1, species2));
         assertEquals(2, result.size());

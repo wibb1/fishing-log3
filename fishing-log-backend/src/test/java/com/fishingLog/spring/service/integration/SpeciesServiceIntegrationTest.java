@@ -16,6 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +42,7 @@ public class SpeciesServiceIntegrationTest extends BaseIntegrationIntegrationTes
     public void start() {
         Instant fixedInstant = Instant.parse("2024-10-15T00:33:20.060972Z");
         species = new Species(1L, "Samwise", "Gamgee", 10,
-                20, fixedInstant, fixedInstant);
+                20, fixedInstant, fixedInstant, Collections.emptySet());
     }
 
     @AfterEach

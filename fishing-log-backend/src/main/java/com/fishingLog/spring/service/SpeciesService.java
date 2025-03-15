@@ -57,6 +57,10 @@ public class SpeciesService {
         return speciesRepository.saveAll(speciesToSave);
     }
 
+    public Species createSpecies(Species species) {
+        return saveSpecies(species);
+    }
+
     public void deleteSpecies(Long id) {
         logger.info("Species not found with ID: {}", id);
         if (!speciesRepository.existsById(id)) {
@@ -65,5 +69,11 @@ public class SpeciesService {
         }
         speciesRepository.deleteById(id);
         logger.info("Species with ID {} successfully deleted", id);
+    }
+
+    public Species findSpeciesByScientificName(String scientificName) {
+        logger.info("Fetching species with scientific name: {}", scientificName);
+        return speciesRepository.findByScientificName(scientificName)
+                .orElseThrow(() -> new IllegalArgumentException("Species not found with scientific name: " + scientificName));
     }
 }
