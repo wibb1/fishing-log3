@@ -3,6 +3,7 @@ package com.fishingLog.spring.service;
 import com.fishingLog.spring.model.Angler;
 import com.fishingLog.spring.model.Astrological;
 import com.fishingLog.spring.model.Record;
+import com.fishingLog.spring.model.Species;
 import com.fishingLog.spring.model.Tide;
 import com.fishingLog.spring.model.Weather;
 import com.fishingLog.spring.repository.RecordRepository;
@@ -27,12 +28,14 @@ public class RecordService {
     private WeatherService weatherService;
     private TideService tideService;
     private AstrologicalService astrologicalService;
+    private SpeciesService speciesService;
 
-    public RecordService(WeatherService weatherService, TideService tideService, AstrologicalService astrologicalService, StormGlassApiService apiService) {
+    public RecordService(WeatherService weatherService, TideService tideService, AstrologicalService astrologicalService, StormGlassApiService apiService, SpeciesService speciesService) {
         this.weatherService = weatherService;
         this.tideService = tideService;
         this.astrologicalService = astrologicalService;
         this.apiService = apiService;
+        this.speciesService = speciesService;
     }
 
     public List<Record> findAllRecords() {
@@ -91,6 +94,8 @@ public class RecordService {
         Angler currentAngler = getCurrentAngler()
                 .orElseThrow(() -> new IllegalStateException("No authenticated user found"));
 
+        Species species = speciesService.createSpecies(record.getSpecies());
+
         Record newRecord = new Record.RecordBuilder()
                 .setName(record.getName())
                 .setSuccess(record.getSuccess())
@@ -105,6 +110,7 @@ public class RecordService {
                 .setWeather(weather)
                 .setTides(tides)
                 .setAstrological(astrological)
+                .setSpecies(species)
                 .build();
 
         return recordRepository.save(newRecord);
@@ -136,5 +142,9 @@ public class RecordService {
 
     public void setAstrologicalService(AstrologicalService astrologicalService) {
         this.astrologicalService = astrologicalService;
+    }
+
+    public void setSpeciesService(SpeciesService speciesService) {
+        this.speciesService = speciesService;
     }
 }

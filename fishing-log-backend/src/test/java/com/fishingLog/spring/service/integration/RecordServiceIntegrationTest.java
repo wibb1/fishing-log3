@@ -3,11 +3,13 @@ package com.fishingLog.spring.service.integration;
 import com.fishingLog.spring.model.Angler;
 import com.fishingLog.spring.model.Astrological;
 import com.fishingLog.spring.model.Record;
+import com.fishingLog.spring.model.Species;
 import com.fishingLog.spring.model.Tide;
 import com.fishingLog.spring.model.Weather;
 import com.fishingLog.spring.repository.RecordRepository;
 import com.fishingLog.spring.service.AstrologicalService;
 import com.fishingLog.spring.service.RecordService;
+import com.fishingLog.spring.service.SpeciesService;
 import com.fishingLog.spring.service.TideService;
 import com.fishingLog.spring.service.WeatherService;
 import com.fishingLog.spring.utils.ApiResponse;
@@ -22,6 +24,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -54,13 +57,16 @@ public class RecordServiceIntegrationTest extends BaseIntegrationIntegrationTest
     @MockBean
     private AstrologicalService astrologicalService;
 
+    @MockBean
+    private SpeciesService speciesService;
+
     @Test
     public void testCreateRecordWithRelatedEntities() {
         Authentication authentication = mock(Authentication.class);
         SecurityContext securityContext = mock(SecurityContext.class);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(new Angler(1L, "Samwise", "Gamgee", "SamwiseGamgee",
-                "SamWizeGamGee@noplace.com", "USER","password", Instant.now(), Instant.now()));
+                "SamWizeGamGee@noplace.com", Collections.singletonList("USER"), "password", Instant.now(), Instant.now()));
         SecurityContextHolder.setContext(securityContext);
 
         List<ApiResponse> mockResponses = List.of(
@@ -76,10 +82,14 @@ public class RecordServiceIntegrationTest extends BaseIntegrationIntegrationTest
         mockTides.add(new Tide());
         when(tideService.createTides(any())).thenReturn(mockTides);
 
+        Species species = new Species(1L, "Bass", "Micropterus salmoides", 1, 10, Instant.now(), Instant.now(), Collections.emptySet());
+        when(speciesService.createSpecies(any(Species.class))).thenReturn(species);
+
         Record record = new Record.RecordBuilder()
                 .setName("Test Record")
                 .setSuccess("true")
                 .setBody("A body")
+                .setAnglerId(1L)
                 .setLatitude(37.7749)
                 .setLongitude(-122.4194)
                 .setDatetime(Instant.now())

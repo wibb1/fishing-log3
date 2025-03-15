@@ -1,18 +1,20 @@
 package com.fishingLog.spring.service.unit;
 
-import com.fishingLog.FishingLogApplication;
 import com.fishingLog.spring.model.Angler;
 import com.fishingLog.spring.model.Astrological;
 import com.fishingLog.spring.model.Record;
+import com.fishingLog.spring.model.Species;
 import com.fishingLog.spring.model.Tide;
 import com.fishingLog.spring.model.Weather;
 import com.fishingLog.spring.repository.AstrologicalRepository;
 import com.fishingLog.spring.repository.RecordRepository;
+import com.fishingLog.spring.repository.SpeciesRepository;
 import com.fishingLog.spring.repository.TideRepository;
 import com.fishingLog.spring.repository.TideStationRepository;
 import com.fishingLog.spring.repository.WeatherRepository;
 import com.fishingLog.spring.service.AstrologicalService;
 import com.fishingLog.spring.service.RecordService;
+import com.fishingLog.spring.service.SpeciesService;
 import com.fishingLog.spring.service.TideService;
 import com.fishingLog.spring.service.TideStationService;
 import com.fishingLog.spring.service.WeatherService;
@@ -27,8 +29,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -60,14 +60,14 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = FishingLogApplication.class)
-@AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("UnitTest")
 @Tag("unit")
 public class RecordServiceUnitTest {
     private RecordRepository recordRepository;
     private StormGlassApiService apiService;
+    private SpeciesRepository speciesRepository;
+    private SpeciesService speciesService;
     private SecurityContext securityContext;
     private Authentication authentication;
     private StormGlassWeatherConverter weatherConverter;
@@ -172,12 +172,14 @@ public class RecordServiceUnitTest {
         tides.add(new Tide(testdata.getTideDataJsonNode().get("data").get(0)));
         tides.iterator().next().setId(1L);
 
+        Species species = new Species(1L, "Bass", "Micropterus salmoides", 1, 10, Instant.now(), Instant.now(), Collections.emptySet());
+        when(speciesService.createSpecies(any())).thenReturn(species);
+
         when(weatherService.createWeather(anyString())).thenReturn(weather);
         when(tideService.createTides(any())).thenReturn(tides);
         when(recordRepository.save(any(Record.class))).thenReturn(record);
 
         Record result = recordService.createRecordWithRelatedEntities(record);
-
         record.setAstrological(astrological);
         record.setWeather(weather);
         record.setTides(tides);
@@ -281,10 +283,14 @@ public class RecordServiceUnitTest {
         tideService.setTideStationService(tideStationService);
         tideService.setTideRepository(tideRepository);
 
+        // Species related mocks
+        speciesService = mock(SpeciesService.class);
+        speciesRepository = mock(SpeciesRepository.class);
+
         // Record related mocks
         apiService = mock(StormGlassApiService.class);
         recordRepository = mock(RecordRepository.class);
-        recordService = new RecordService(weatherService, tideService, astrologicalService, apiService);
+        recordService = new RecordService(weatherService, tideService, astrologicalService, apiService, speciesService);
         recordService.setRecordRepository(recordRepository);
     }
 }

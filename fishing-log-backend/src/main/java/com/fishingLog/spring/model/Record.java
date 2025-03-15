@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -63,9 +62,13 @@ public class Record {
     @ManyToMany(mappedBy = "records")
     private Set<Tide> tides;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "astrological_id", referencedColumnName = "id")
     private Astrological astrological;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "species_id", referencedColumnName = "id")
+    private Species species;
 
     public static class RecordBuilder {
         private String name;
@@ -82,6 +85,7 @@ public class Record {
         private Weather weather;
         private Set<Tide> tides = new HashSet<>();
         private Astrological astrological;
+        private Species species;
 
         public RecordBuilder setName(String name) {
             this.name = name;
@@ -153,6 +157,11 @@ public class Record {
             return this;
         }
 
+        public RecordBuilder setSpecies(Species species) {
+            this.species = species;
+            return this;
+        }
+
         public Record build() {
             Record record = new Record();
             record.name = this.name;
@@ -169,6 +178,7 @@ public class Record {
             record.weather = this.weather;
             record.tides = this.tides;
             record.astrological = this.astrological;
+            record.species = this.species;
             return record;
         }
     }
