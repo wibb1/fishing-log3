@@ -61,7 +61,7 @@ public class AstrologicalService {
         existingAstrological.setCurrentMoonPhase(astrologicalDetails.getCurrentMoonPhase());
         existingAstrological.setMoonrise(astrologicalDetails.getMoonrise());
         existingAstrological.setMoonset(astrologicalDetails.getMoonset());
-        existingAstrological.setRecord(astrologicalDetails.getRecord());
+        existingAstrological.setRecords(astrologicalDetails.getRecords());
         existingAstrological.setSunrise(astrologicalDetails.getSunrise());
         existingAstrological.setSunset(astrologicalDetails.getSunset());
         existingAstrological.setTime(astrologicalDetails.getTime());

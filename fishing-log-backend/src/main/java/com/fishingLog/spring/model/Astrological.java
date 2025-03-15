@@ -14,7 +14,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -23,6 +23,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -30,7 +32,7 @@ import java.util.Map;
 @NoArgsConstructor
 @Entity
 @ToString
-@EqualsAndHashCode(exclude = {"id", "record"})
+@EqualsAndHashCode(exclude = {"id", "records"})
 @Table(name = "astrological")
 public class Astrological {
     @Id
@@ -75,8 +77,8 @@ public class Astrological {
     })
     private MoonPhase currentMoonPhase;
 
-    @OneToOne(mappedBy = "astrological")
-    private Record record;
+    @OneToMany(mappedBy = "astrological", orphanRemoval = true)
+    private List<Record> records = new ArrayList<>();
 
     private static final ObjectMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
 
