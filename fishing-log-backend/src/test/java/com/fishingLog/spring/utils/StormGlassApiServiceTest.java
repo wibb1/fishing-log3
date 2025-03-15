@@ -8,11 +8,10 @@ import com.fishingLog.FishingLogApplication;
 import com.fishingLog.spring.service.integration.BaseIntegrationIntegrationTest;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -26,9 +25,9 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = FishingLogApplication.class)
 @AutoConfigureMockMvc
-@ExtendWith(MockitoExtension.class)
-@ActiveProfiles("UnitTest")
-@Tag("unit")
+@Testcontainers
+@ActiveProfiles("test")
+@Tag("integration")
 public class StormGlassApiServiceTest extends BaseIntegrationIntegrationTest {
     private static final String expectedResponse = """
             [{"hours":[{"airTemperature":{"sg":23.38},"cloudCover":{"sg":43.7},"currentDirection":{"sg":321.8},
