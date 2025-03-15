@@ -40,9 +40,7 @@ public abstract class BaseIntegrationIntegrationTest {
 
     @AfterAll
     static void tearDown() {
-        if (!postgreSQLContainer.isRunning()) {
-            postgreSQLContainer.stop();
-        }
+        // Allowing Testcontainers to handle the container lifecycle
     }
 
     @DynamicPropertySource

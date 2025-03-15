@@ -1,4 +1,4 @@
-package com.fishingLog.config;
+package com.fishingLog.spring.security;
 
 import com.fishingLog.spring.repository.AnglerRepository;
 import org.springframework.context.annotation.Bean;
@@ -7,7 +7,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,8 +23,13 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> anglerRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Angler not found: " + username));
+        return username -> {
+            var angler = anglerRepository.findByUsername(username);
+            if (angler.isEmpty()) {
+                throw new IllegalArgumentException("User " + username + "not found");
+            }
+            return new AnglerUserDetails(angler.get());
+        };
     }
 
     @Bean
