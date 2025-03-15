@@ -30,7 +30,7 @@ import java.util.Map;
 public class Weather {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @Column
     private Double airTemperature;
     @Column
